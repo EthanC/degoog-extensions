@@ -74,7 +74,9 @@ plugins/<name>/
 - **No-JS page.** The `/nojs` page only runs slots with `supportsNojs: true`, and passes `context.nojs`. Leave out JS-only controls in that mode.
 - **`isClientExposed`** must be a boolean. Use `false` when all traffic goes through the server. It drives a privacy indicator in settings.
 - **Settings.** `settingsSchema` field values arrive in `configure(settings)` as **strings**, toggles included (`"true"`/`"false"`). Parse defensively and clamp. Reserved keys: `disabled`, `slotPosition`, `slotSearchTypes`, `priority`, `score`, `outgoingTransport`, `searchTypeOverride`, `theme`, `shortcuts`.
-- **`init(ctx)`.** It runs once, with `ctx.template`, `ctx.fetch` (proxy-aware), `ctx.useCache(ns, ttlMs)`, `ctx.readFile`, `ctx.signProxyUrl` and `ctx.apiBase`.
+- **`init(ctx)`.** It runs once per loaded module, with `ctx.template`, `ctx.fetch` (proxy-aware), `ctx.useCache(ns, ttlMs)`, `ctx.readFile(name)` (reads a file from the plugin folder, relative path), `ctx.signProxyUrl` and `ctx.apiBase`.
+- **Keep `index.js` a single file.** degoog imports the entry by `file://` URL (`src/server/extensions/registry-factory.ts`), so `import "./x.js"` resolves. A reload re-imports only the entry, with `?r=<n>` appended, so sibling modules stay cached and go stale.
+- **Accept a test clock.** Anything time-dependent should read `context.now` when it is a finite number and `Date.now()` otherwise. degoog never sets it, and tests get deterministic output.
 
 ### Client scripts (`script.js`)
 
@@ -83,6 +85,8 @@ plugins/<name>/
 - **Back-forward cache.** Survive it: pause timers on `pagehide` and resume on `pageshow` when `event.persisted` is true. Never disconnect your observer for good on `pagehide`.
 - **Plain-HTTP instances.** On plain-HTTP origins, typical for LAN instances, `navigator.clipboard` is `undefined`. Always keep a fallback that copies through a hidden textarea and `execCommand("copy")`.
 - **Labels.** Remember an element's original label before changing it (for example "Copy" to "Copied"). Clear pending reset timers on repeat clicks, or the label sticks.
+- **`t(key, vars)`** interpolates `{name}` placeholders from an object and returns the key itself when it is missing (degoog `src/public/t.js`). Treat `t(key) === key` as "no translations" and keep the server's text.
+- **Sharing code with `index.js`.** `script.js` cannot import anything. When the browser needs the server's logic, mark the block in both files and add a test that the two copies match. `plugins/timezone` does this with `// <shared-core>` markers.
 
 ### Styling
 
@@ -102,6 +106,21 @@ A slot that fires on the wrong query hijacks someone's search, so treat false po
 - **Respect bare-input toggles.** Give users a toggle for "bare" triggers, such as a lone number or a lone date, but don't let it disable explicit forms like a keyword or a unit.
 - **Check `Date.UTC` years.** It maps years 0 to 99 to 1900 to 1999. Build dates with `new Date(0)` plus `setUTCFullYear(y, m, d)` plus `setUTCHours`, and validate by reading the fields back.
 - **Return null when unsure.** It's better to show no panel than a wrong one.
+- **Consume every token.** For natural-language triggers, classify each token (zone, time, connector, filler and so on) and return null on any unknown word. That rejects `time in a bottle` or `paris time lapse` without a blacklist.
+- **Gate short ambiguous words on context.** Two-letter abbreviations such as `et` or `pt` should only count next to a time, a connector or another zone, otherwise `ct scan` and `pt cruiser` trigger. Test that no single-word lookup key equals a grammar word.
+
+## Dates and time zones
+
+Verified on Node 26 and Bun 1.4.4.
+
+- **The server never knows the visitor's zone.** Render with a configurable home zone, which no-JS pages keep, and let `script.js` switch to `Intl.DateTimeFormat().resolvedOptions().timeZone`.
+- **Never pass user text as `timeZone`.** In Node `EST` resolves to `America/Panama` and `CET` to `Europe/Brussels`. In Bun they stay fixed legacy zones with no daylight saving time. Map abbreviations through your own table.
+- **Node and Bun disagree on zone ids.** Node's `Intl.supportedValuesOf("timeZone")` and `resolvedOptions().timeZone` use old ids such as `Asia/Calcutta` and `Europe/Kiev` and leave out `UTC`. Bun uses `Asia/Kolkata` and `Europe/Kyiv` and includes `UTC`. Both accept either spelling as input, so map old ids to new ones yourself and canonicalise both sides before comparing zones.
+- **City names from zone ids include English words**, such as `Easter`, `Wake`, `Christmas` and `Jersey`. Exclude them before matching queries against them.
+- **Offset ids** such as `+05:30` are valid `timeZone` values.
+- **Abbreviations depend on the locale.** `en-US` gives `EST` but `GMT+1` for Berlin, `en-GB` gives `CET` and `BST`, and only `ja-JP` gives `JST`. Try several locales, then a small fallback table.
+- **Find daylight saving changes** by stepping a few days at a time and bisecting to the minute from a minute-aligned start. Some zones move by 30 minutes (`Australia/Lord_Howe`).
+- **Plural units** come from `Intl.NumberFormat(locale, { style: "unit", unit: "hour", unitDisplay: "long" })`, which gives `5.5 hours` and `5,5 Stunden` without plural locale keys.
 
 ## Security and privacy
 
@@ -110,6 +129,7 @@ degoog runs extensions in-process with no sandbox, and some instances are public
 - **Escape everything you interpolate into HTML**, attributes included. Escape `&`, `<`, `>` and `"`. Also escape `{{` to `&#123;&#123;`, otherwise degoog's `{{ t:… }}` pass can expand user text.
 - **Never put user input into `<script>`** or inline event handlers. Use `data-*` attributes plus `script.js`.
 - **Make outgoing requests through `ctx.fetch` or `context.fetch`**, never global `fetch`. Proxy and transport settings then still apply, and the visitor's IP never reaches third parties. Prefer extensions that make no network calls at all.
+- **When a lookup must go online**, send only the fragment it needs, such as a place name, never the whole query. Do it from `execute`, never from `trigger`. Gate it behind a setting, cache the answers, and say in the README exactly what is sent and where. `plugins/timezone` does this for places that are not built in.
 - **Don't log, store or send queries anywhere.** degoog's privacy model allows exactly two places that keep queries: the search cache and the opt-in indexer.
 - **Mark secret settings** with `type: "password"` and `secret: true`, so they are never sent to the browser.
 - **Plugin routes** (`export const routes`) are public unless you check auth. Never use GET for anything that mutates state.
@@ -124,7 +144,8 @@ degoog runs extensions in-process with no sandbox, and some instances are public
 - **Cover rendering.** Assert on `data-*` attributes and field text in the returned HTML, not on exact markup. Check that no `{{` or untranslated `ns.key` strings leak through.
 - **Cover locales.** Assert that every locale has the same key set as `en.json`.
 - **Test client scripts.** Use `node:vm` with a minimal fake DOM and fake timers. `tests/timestamp-client.test.mjs` is a working example covering mount, copy and back-forward cache behaviour.
-- **Check Bun parity.** degoog runs on Bun (`engines.bun` in its package.json). For anything engine-sensitive, such as regex, Intl or BigInt, also run a quick check with a portable Bun build.
+- **Check Bun parity.** degoog runs on Bun (`engines.bun` in its package.json). For anything engine-sensitive, such as regex, Intl or BigInt, run `npm install --no-save bun` in a scratch folder and then `<scratch>/node_modules/.bin/bun test tests/<name>.test.mjs`. Bun runs the `node:test` suites unchanged.
+- **Test client scripts against real markup.** Render the panel with `execute()` and parse it into the fake DOM, then stub `Date` and the default zone of `Intl.DateTimeFormat` in the `vm` context. `tests/timezone-client.test.mjs` has a small parser for this.
 
 ### Testing against a live instance
 
