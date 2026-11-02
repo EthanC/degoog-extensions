@@ -41,6 +41,7 @@ Every extension needs an entry, otherwise the Store never shows it:
 - **`version`** must be bumped for every change that installs should pick up. The Store shows "update available" whenever the installed version string differs from the repository's.
 - **`minDegoogVersion`** only shows a warning on the Store card. It does not block installation.
 - **The installed folder** is named `<github-user>-<repo>-<folder>`, lowercased. For the Timestamp plugin that is `<github-user>-degoog-extensions-timestamp`. Renaming an extension's folder therefore orphans every user's settings for it.
+- **`repo-image`** (top level, next to `author`) is the repository avatar on the degoog-org/community-extensions showcase (`scripts/indexer/repo.js`). A relative path resolves to the raw file in this repository; absolute `http(s)` and `data:` URLs pass through. This repository uses `repo_image.png` at the root.
 
 ## Plugin anatomy
 

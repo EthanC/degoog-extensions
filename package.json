@@ -2,6 +2,7 @@
   "name": "degoog-extensions",
   "description": "Extensions for degoog search by EthanC.",
   "author": "EthanC",
+  "repo-image": "repo_image.png",
   "type": "module",
   "scripts": {
     "test": "node --test tests/"
