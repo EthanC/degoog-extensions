@@ -1,0 +1,19 @@
+{
+  "name": "degoog-extensions",
+  "description": "Extensions for degoog search by EthanC.",
+  "author": "EthanC",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/"
+  },
+  "plugins": [
+    {
+      "path": "plugins/timestamp",
+      "name": "Timestamp",
+      "description": "Converts Unix timestamps into human readable UTC and local dates, and dates back into timestamps. Triggers on bare timestamps, ISO dates and keywords such as epoch or unix time.",
+      "version": "1.0.0",
+      "type": "slot",
+      "minDegoogVersion": "1.1.0"
+    }
+  ]
+}

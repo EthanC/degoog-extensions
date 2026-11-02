@@ -1,0 +1,56 @@
+{
+  "timestamp": {
+    "name": "Timestamp",
+    "description": "Converte i timestamp Unix in date leggibili, in UTC e in ora locale, e le date in timestamp. Si attiva con un timestamp da solo, una data ISO o parole chiave come epoch o unix time.",
+    "title": "Timestamp Unix",
+    "titleNow": "Timestamp Unix attuale",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "kicker": {
+      "number": "Da timestamp a data",
+      "date": "Da data a timestamp",
+      "now": "Adesso"
+    },
+    "labels": {
+      "utc": "UTC",
+      "local": "Locale",
+      "iso": "ISO 8601",
+      "seconds": "Secondi",
+      "milliseconds": "Millisecondi"
+    },
+    "units": {
+      "seconds": "secondi",
+      "milliseconds": "millisecondi",
+      "microseconds": "microsecondi",
+      "nanoseconds": "nanosecondi"
+    },
+    "meta": {
+      "week": "settimana ISO {week}",
+      "dayOfYear": "giorno {day} del {year}"
+    },
+    "note": {
+      "assumedUnit": "Unità dedotta dal numero di cifre: {unit}. Aggiungi un'unità come “ms” o “s” alla ricerca per forzarla.",
+      "assumedUtc": "Nessun fuso orario indicato, la data è stata letta come UTC. Aggiungi Z, UTC o uno scostamento come +02:00 per cambiarlo.",
+      "outOfRange": "Questo valore è fuori dall'intervallo rappresentabile da una data (circa ±275.000 anni dal 1970)."
+    },
+    "settings": {
+      "bareNumbers": {
+        "label": "Converti numeri da soli",
+        "description": "Mostra il pannello quando l'intera ricerca è un numero di almeno 9 cifre, anche senza parola chiave. Le ricerche con parola chiave come “epoch 86400” funzionano sempre."
+      },
+      "bareDates": {
+        "label": "Converti date da sole",
+        "description": "Mostra il pannello quando l'intera ricerca è una data ISO 8601 come 2024-01-15 o 2024-01-15T10:30:00Z, anche senza parola chiave."
+      },
+      "timeFormat": {
+        "label": "Formato orario",
+        "description": "12 ore, 24 ore, oppure secondo la lingua con “auto”."
+      },
+      "extraTimeZones": {
+        "label": "Fusi orari aggiuntivi",
+        "placeholder": "America/New_York, Europe/Berlin",
+        "description": "Fusi IANA separati da virgole, mostrati accanto a UTC e all'ora locale. I fusi sconosciuti vengono ignorati."
+      }
+    }
+  }
+}

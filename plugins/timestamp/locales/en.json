@@ -1,0 +1,56 @@
+{
+  "timestamp": {
+    "name": "Timestamp",
+    "description": "Converts Unix timestamps into human readable UTC and local dates, and dates back into timestamps. Triggers on bare timestamps, ISO dates and keywords such as epoch or unix time.",
+    "title": "Unix timestamp",
+    "titleNow": "Current Unix timestamp",
+    "copy": "Copy",
+    "copied": "Copied",
+    "kicker": {
+      "number": "Timestamp to date",
+      "date": "Date to timestamp",
+      "now": "Right now"
+    },
+    "labels": {
+      "utc": "UTC",
+      "local": "Local",
+      "iso": "ISO 8601",
+      "seconds": "Seconds",
+      "milliseconds": "Milliseconds"
+    },
+    "units": {
+      "seconds": "seconds",
+      "milliseconds": "milliseconds",
+      "microseconds": "microseconds",
+      "nanoseconds": "nanoseconds"
+    },
+    "meta": {
+      "week": "ISO week {week}",
+      "dayOfYear": "day {day} of {year}"
+    },
+    "note": {
+      "assumedUnit": "Unit guessed from the number of digits: {unit}. Add a unit such as “ms” or “s” to the query to override it.",
+      "assumedUtc": "No time zone given, so the date was read as UTC. Add Z, UTC or an offset such as +02:00 to change that.",
+      "outOfRange": "This value is outside the range a date can represent (about ±275,000 years from 1970)."
+    },
+    "settings": {
+      "bareNumbers": {
+        "label": "Convert bare numbers",
+        "description": "Show the panel when the whole query is a number with at least 9 digits, even without a keyword. Keyword queries such as “epoch 86400” always work."
+      },
+      "bareDates": {
+        "label": "Convert bare dates",
+        "description": "Show the panel when the whole query is an ISO 8601 date such as 2024-01-15 or 2024-01-15T10:30:00Z, even without a keyword."
+      },
+      "timeFormat": {
+        "label": "Clock format",
+        "description": "12-hour, 24-hour, or follow the locale when set to auto."
+      },
+      "extraTimeZones": {
+        "label": "Extra time zones",
+        "placeholder": "America/New_York, Europe/Berlin",
+        "description": "Comma-separated IANA time zones to list alongside UTC and your local time. Unknown zones are ignored."
+      }
+    }
+  }
+}

@@ -1,0 +1,134 @@
+.tstamp-card {
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 100%;
+}
+
+.tstamp-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tstamp-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.tstamp-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.tstamp-headline {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.tstamp-headline.tstamp-mono {
+  font-size: 2rem;
+  letter-spacing: 0.01em;
+}
+
+.tstamp-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.tstamp-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.tstamp-rows {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.4rem;
+  margin: 0;
+}
+
+.tstamp-row {
+  display: contents;
+}
+
+.tstamp-row[hidden] {
+  display: none;
+}
+
+.tstamp-label {
+  align-self: center;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.tstamp-value {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.tstamp-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tstamp-value .tstamp-copy {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.8rem;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+
+.tstamp-card:hover .tstamp-copy,
+.tstamp-copy:focus-visible {
+  opacity: 1;
+}
+
+.tstamp-copy.tstamp-copy--done {
+  color: var(--success, var(--primary));
+  opacity: 1;
+}
+
+.tstamp-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 480px) {
+  .tstamp-rows {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.15rem;
+  }
+
+  .tstamp-row + .tstamp-row .tstamp-label {
+    margin-top: 0.5rem;
+  }
+
+  .tstamp-headline.tstamp-mono {
+    font-size: 1.6rem;
+  }
+}

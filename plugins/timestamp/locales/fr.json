@@ -1,0 +1,56 @@
+{
+  "timestamp": {
+    "name": "Horodatage",
+    "description": "Convertit les horodatages Unix en dates lisibles, en UTC et en heure locale, et les dates en horodatages. Se déclenche sur un horodatage seul, une date ISO ou des mots-clés comme epoch ou unix time.",
+    "title": "Horodatage Unix",
+    "titleNow": "Horodatage Unix actuel",
+    "copy": "Copier",
+    "copied": "Copié",
+    "kicker": {
+      "number": "Horodatage vers date",
+      "date": "Date vers horodatage",
+      "now": "Maintenant"
+    },
+    "labels": {
+      "utc": "UTC",
+      "local": "Local",
+      "iso": "ISO 8601",
+      "seconds": "Secondes",
+      "milliseconds": "Millisecondes"
+    },
+    "units": {
+      "seconds": "secondes",
+      "milliseconds": "millisecondes",
+      "microseconds": "microsecondes",
+      "nanoseconds": "nanosecondes"
+    },
+    "meta": {
+      "week": "semaine ISO {week}",
+      "dayOfYear": "jour {day} de {year}"
+    },
+    "note": {
+      "assumedUnit": "Unité déduite du nombre de chiffres : {unit}. Ajoutez une unité comme « ms » ou « s » à la recherche pour la forcer.",
+      "assumedUtc": "Aucun fuseau horaire indiqué, la date a été lue en UTC. Ajoutez Z, UTC ou un décalage comme +02:00 pour changer cela.",
+      "outOfRange": "Cette valeur dépasse la plage qu'une date peut représenter (environ ±275 000 ans à partir de 1970)."
+    },
+    "settings": {
+      "bareNumbers": {
+        "label": "Convertir les nombres seuls",
+        "description": "Affiche le panneau quand toute la recherche est un nombre d'au moins 9 chiffres, même sans mot-clé. Les recherches avec mot-clé comme « epoch 86400 » fonctionnent toujours."
+      },
+      "bareDates": {
+        "label": "Convertir les dates seules",
+        "description": "Affiche le panneau quand toute la recherche est une date ISO 8601 comme 2024-01-15 ou 2024-01-15T10:30:00Z, même sans mot-clé."
+      },
+      "timeFormat": {
+        "label": "Format de l'heure",
+        "description": "12 heures, 24 heures, ou selon la langue avec « auto »."
+      },
+      "extraTimeZones": {
+        "label": "Fuseaux horaires supplémentaires",
+        "placeholder": "America/New_York, Europe/Berlin",
+        "description": "Fuseaux IANA séparés par des virgules, affichés à côté de l'UTC et de l'heure locale. Les fuseaux inconnus sont ignorés."
+      }
+    }
+  }
+}

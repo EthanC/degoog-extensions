@@ -1,0 +1,56 @@
+{
+  "timestamp": {
+    "name": "Zeitstempel",
+    "description": "Wandelt Unix-Zeitstempel in lesbare UTC- und Ortszeit-Angaben um und Datumsangaben zurück in Zeitstempel. Reagiert auf nackte Zeitstempel, ISO-Daten und Stichwörter wie epoch oder unix time.",
+    "title": "Unix-Zeitstempel",
+    "titleNow": "Aktueller Unix-Zeitstempel",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "kicker": {
+      "number": "Zeitstempel zu Datum",
+      "date": "Datum zu Zeitstempel",
+      "now": "Jetzt"
+    },
+    "labels": {
+      "utc": "UTC",
+      "local": "Lokal",
+      "iso": "ISO 8601",
+      "seconds": "Sekunden",
+      "milliseconds": "Millisekunden"
+    },
+    "units": {
+      "seconds": "Sekunden",
+      "milliseconds": "Millisekunden",
+      "microseconds": "Mikrosekunden",
+      "nanoseconds": "Nanosekunden"
+    },
+    "meta": {
+      "week": "ISO-Woche {week}",
+      "dayOfYear": "Tag {day} von {year}"
+    },
+    "note": {
+      "assumedUnit": "Einheit anhand der Stellenzahl geraten: {unit}. Ergänze eine Einheit wie „ms“ oder „s“ in der Suche, um sie festzulegen.",
+      "assumedUtc": "Keine Zeitzone angegeben, das Datum wurde als UTC gelesen. Ergänze Z, UTC oder einen Versatz wie +02:00, um das zu ändern.",
+      "outOfRange": "Dieser Wert liegt außerhalb des darstellbaren Datumsbereichs (etwa ±275.000 Jahre ab 1970)."
+    },
+    "settings": {
+      "bareNumbers": {
+        "label": "Nackte Zahlen umwandeln",
+        "description": "Zeigt das Panel, wenn die gesamte Suche eine Zahl mit mindestens 9 Stellen ist, auch ohne Stichwort. Suchen mit Stichwort wie „epoch 86400“ funktionieren immer."
+      },
+      "bareDates": {
+        "label": "Nackte Daten umwandeln",
+        "description": "Zeigt das Panel, wenn die gesamte Suche ein ISO-8601-Datum wie 2024-01-15 oder 2024-01-15T10:30:00Z ist, auch ohne Stichwort."
+      },
+      "timeFormat": {
+        "label": "Uhrzeitformat",
+        "description": "12 Stunden, 24 Stunden oder bei „auto“ nach Spracheinstellung."
+      },
+      "extraTimeZones": {
+        "label": "Zusätzliche Zeitzonen",
+        "placeholder": "America/New_York, Europe/Berlin",
+        "description": "Kommagetrennte IANA-Zeitzonen, die neben UTC und der Ortszeit angezeigt werden. Unbekannte Zonen werden ignoriert."
+      }
+    }
+  }
+}
