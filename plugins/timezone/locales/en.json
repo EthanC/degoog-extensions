@@ -1,0 +1,97 @@
+{
+  "timezone": {
+    "name": "Time zone",
+    "description": "Current time anywhere, time zone conversions and daylight saving dates, from plain questions such as “time in tokyo”, “5pm ET to PT” or “when do the clocks change”.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "title": {
+      "now": "Current time",
+      "zone": "Time zone",
+      "convert": "Time zone conversion",
+      "diff": "Time difference",
+      "dst": "Daylight saving time"
+    },
+    "kicker": {
+      "now": "Local time",
+      "zone": "Zone name",
+      "convert": "Converted time",
+      "diff": "Right now",
+      "dst": "Clock change"
+    },
+    "labels": {
+      "zone": "Time zone",
+      "offset": "UTC offset",
+      "dst": "Daylight saving",
+      "difference": "Difference",
+      "home": "home",
+      "you": "you",
+      "now": "Right now",
+      "next": "Next change",
+      "then": "After that",
+      "since": "Last change"
+    },
+    "diff": {
+      "ahead": "{amount} ahead of {zone}",
+      "behind": "{amount} behind {zone}",
+      "same": "Same time as {zone}",
+      "headAhead": "{zone} is {amount} ahead of {base}",
+      "headBehind": "{zone} is {amount} behind {base}",
+      "headSame": "{zone} has the same time as {base}",
+      "changesAhead": "From {date}, {zone} will be {amount} ahead of {base}.",
+      "changesBehind": "From {date}, {zone} will be {amount} behind {base}.",
+      "changesSame": "From {date}, {zone} will have the same time as {base}."
+    },
+    "dst": {
+      "headline": "{change} on {date}",
+      "forward": "Clocks go forward {amount}",
+      "back": "Clocks go back {amount}",
+      "localShift": "{from} → {to} local time",
+      "until": "In effect until {date}",
+      "starts": "Starts {date}",
+      "notObserved": "Not observed",
+      "inEffect": "Daylight saving time",
+      "standard": "Standard time",
+      "none": "{zone} does not use daylight saving time",
+      "noneYear": "No clock changes in {zone} in {year}",
+      "yearTitle": "Clock changes in {zone} in {year}",
+      "allYear": "{offset} all year",
+      "statusYes": "Yes, daylight saving time is in effect in {zone}",
+      "statusNo": "No, {zone} is on standard time",
+      "statusNone": "No, {zone} does not use daylight saving time"
+    },
+    "note": {
+      "ambiguous": "{term} was read as {zone}. It can also mean {alternatives}.",
+      "multiZone": "{place} spans several time zones. Showing {zone}. Others include {alternatives}.",
+      "abbrSeason": "{abbr} was read as {zone}, which is on {actual} at that time.",
+      "gapTime": "{time} does not exist in {zone} on {date}, because the clocks go forward {amount}. Showing {shown} instead.",
+      "ambiguousTime": "{time} happens twice in {zone} on {date}, because the clocks go back {amount}. Showing the first one."
+    },
+    "settings": {
+      "homeZone": {
+        "label": "Home time zone",
+        "placeholder": "America/New_York",
+        "description": "Used when a question names no zone, such as “5pm ET” or “when does the time change”. Accepts an IANA zone, a city or an abbreviation. Blank uses the server's zone. Visitors' browsers replace it with their own zone unless “Use the visitor's time zone” is off."
+      },
+      "timeFormat": {
+        "label": "Clock format",
+        "description": "12-hour, 24-hour, or follow the visitor's language when set to auto."
+      },
+      "showSeconds": {
+        "label": "Show seconds",
+        "description": "Show seconds on the live clock."
+      },
+      "bareTriggers": {
+        "label": "Answer short queries",
+        "description": "Show the current time for two-word queries such as “tokyo time” or “london timezone”. Full questions such as “time in tokyo” always work."
+      },
+      "browserZone": {
+        "label": "Use the visitor's time zone",
+        "description": "Let the browser add the visitor's own time and use their zone instead of the home time zone. Nothing is sent to the server."
+      },
+      "onlineLookup": {
+        "label": "Look up other places online",
+        "description": "Find places that are not built in, such as “current time foster city” or “current time springfield il”, with the Open-Meteo geocoding service. Only the place name, and a country code when one is given, is sent, through degoog's outgoing connection. Off keeps every lookup on the server."
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+.tz-card {
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 100%;
+}
+
+.tz-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tz-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.tz-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.tz-badge:empty,
+.tz-sub:empty,
+.tz-abbr:empty,
+.tz-tag:empty {
+  display: none;
+}
+
+.tz-headline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.tz-clock {
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.tz-headline .tz-bind {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tz-head-abbr {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.tz-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.tz-rows {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.45rem;
+  margin: 0;
+}
+
+.tz-rows:empty {
+  display: none;
+}
+
+.tz-row {
+  display: contents;
+}
+
+.tz-row[hidden] {
+  display: none;
+}
+
+.tz-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.tz-place {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tz-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--success, var(--primary));
+}
+
+.tz-tag[hidden] {
+  display: none;
+}
+
+.tz-value {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 0.4rem;
+  row-gap: 0.1rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.tz-time {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.tz-abbr {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.tz-meta {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.tz-meta > :empty {
+  display: none;
+}
+
+.tz-meta > :not(:empty) ~ :not(:empty)::before {
+  content: " · ";
+}
+
+.tz-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tz-value .tz-copy {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.8rem;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+
+.tz-card:hover .tz-copy,
+.tz-copy:focus-visible {
+  opacity: 1;
+}
+
+.tz-copy.tz-copy--done {
+  color: var(--success, var(--primary));
+  opacity: 1;
+}
+
+.tz-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.tz-note[hidden] {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .tz-rows {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.15rem;
+  }
+
+  .tz-row + .tz-row .tz-label {
+    margin-top: 0.5rem;
+  }
+
+  .tz-clock {
+    font-size: 1.6rem;
+  }
+}

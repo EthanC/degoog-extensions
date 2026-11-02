@@ -15,6 +15,7 @@ Extensions for [degoog](https://github.com/degoog-org/degoog) search.
 | Name | Type | Description |
 | --- | --- | --- |
 | [Timestamp](plugins/timestamp) | slot | Converts Unix timestamps into human readable UTC and local dates, and dates back into timestamps. Triggers on bare timestamps, ISO dates and keywords such as `epoch` or `unix time`. |
+| [Time zone](plugins/timezone) | slot | Current time anywhere, time zone conversions and daylight saving dates, from plain questions such as `time in tokyo`, `5pm ET to PT` or `when do the clocks change`. |
 
 ## Development
 

@@ -1,0 +1,97 @@
+{
+  "timezone": {
+    "name": "Zeitzone",
+    "description": "Aktuelle Uhrzeit überall, Zeitzonen umrechnen und Termine der Zeitumstellung, aus einfachen Fragen wie „time in tokyo“, „5pm ET to PT“ oder „when do the clocks change“.",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "title": {
+      "now": "Aktuelle Uhrzeit",
+      "zone": "Zeitzone",
+      "convert": "Zeitzonen-Umrechnung",
+      "diff": "Zeitunterschied",
+      "dst": "Sommerzeit"
+    },
+    "kicker": {
+      "now": "Ortszeit",
+      "zone": "Name der Zeitzone",
+      "convert": "Umgerechnete Uhrzeit",
+      "diff": "Jetzt",
+      "dst": "Zeitumstellung"
+    },
+    "labels": {
+      "zone": "Zeitzone",
+      "offset": "UTC-Versatz",
+      "dst": "Sommerzeit",
+      "difference": "Unterschied",
+      "home": "Heimat",
+      "you": "du",
+      "now": "Jetzt",
+      "next": "Nächste Umstellung",
+      "then": "Danach",
+      "since": "Letzte Umstellung"
+    },
+    "diff": {
+      "ahead": "{amount} vor {zone}",
+      "behind": "{amount} hinter {zone}",
+      "same": "Gleiche Uhrzeit wie {zone}",
+      "headAhead": "{zone} ist {amount} vor {base}",
+      "headBehind": "{zone} ist {amount} hinter {base}",
+      "headSame": "{zone} hat die gleiche Uhrzeit wie {base}",
+      "changesAhead": "Ab {date} ist {zone} {amount} vor {base}.",
+      "changesBehind": "Ab {date} ist {zone} {amount} hinter {base}.",
+      "changesSame": "Ab {date} hat {zone} die gleiche Uhrzeit wie {base}."
+    },
+    "dst": {
+      "headline": "{change} am {date}",
+      "forward": "Uhren werden {amount} vorgestellt",
+      "back": "Uhren werden {amount} zurückgestellt",
+      "localShift": "{from} → {to} Ortszeit",
+      "until": "Gilt bis {date}",
+      "starts": "Beginnt am {date}",
+      "notObserved": "Keine Sommerzeit",
+      "inEffect": "Sommerzeit",
+      "standard": "Normalzeit",
+      "none": "{zone} hat keine Sommerzeit",
+      "noneYear": "Keine Zeitumstellung in {zone} im Jahr {year}",
+      "yearTitle": "Zeitumstellungen in {zone} im Jahr {year}",
+      "allYear": "{offset} das ganze Jahr",
+      "statusYes": "Ja, in {zone} gilt gerade die Sommerzeit",
+      "statusNo": "Nein, in {zone} gilt gerade die Normalzeit",
+      "statusNone": "Nein, {zone} hat keine Sommerzeit"
+    },
+    "note": {
+      "ambiguous": "{term} wurde als {zone} gelesen. Gemeint sein kann auch {alternatives}.",
+      "multiZone": "{place} hat mehrere Zeitzonen. Angezeigt wird {zone}. Weitere sind {alternatives}.",
+      "abbrSeason": "{abbr} wurde als {zone} gelesen. Zu diesem Zeitpunkt gilt dort {actual}.",
+      "gapTime": "{time} gibt es in {zone} am {date} nicht, weil die Uhren {amount} vorgestellt werden. Stattdessen wird {shown} angezeigt.",
+      "ambiguousTime": "{time} kommt in {zone} am {date} zweimal vor, weil die Uhren {amount} zurückgestellt werden. Angezeigt wird das erste Mal."
+    },
+    "settings": {
+      "homeZone": {
+        "label": "Heimatzeitzone",
+        "placeholder": "Europe/Berlin",
+        "description": "Wird verwendet, wenn eine Frage keine Zone nennt, etwa „5pm ET“ oder „when does the time change“. Akzeptiert eine IANA-Zone, eine Stadt oder eine Abkürzung. Leer bedeutet die Zone des Servers. Browser ersetzen sie durch die eigene Zone, außer „Zeitzone des Besuchers verwenden“ ist aus."
+      },
+      "timeFormat": {
+        "label": "Uhrzeitformat",
+        "description": "12 Stunden, 24 Stunden oder bei „auto“ passend zur Sprache des Besuchers."
+      },
+      "showSeconds": {
+        "label": "Sekunden anzeigen",
+        "description": "Sekunden auf der laufenden Uhr anzeigen."
+      },
+      "bareTriggers": {
+        "label": "Kurze Anfragen beantworten",
+        "description": "Die Uhrzeit auch bei Anfragen aus zwei Wörtern wie „tokyo time“ oder „london timezone“ zeigen. Ganze Fragen wie „time in tokyo“ funktionieren immer."
+      },
+      "browserZone": {
+        "label": "Zeitzone des Besuchers verwenden",
+        "description": "Der Browser ergänzt die eigene Uhrzeit des Besuchers und nutzt dessen Zone statt der Heimatzeitzone. Dabei wird nichts an den Server gesendet."
+      },
+      "onlineLookup": {
+        "label": "Weitere Orte online suchen",
+        "description": "Findet Orte, die nicht eingebaut sind, etwa „current time foster city“ oder „current time springfield il“, über den Geocoding-Dienst von Open-Meteo. Gesendet wird nur der Ortsname und, falls angegeben, ein Ländercode, über die ausgehende Verbindung von degoog. Aus bedeutet, dass alles auf dem Server bleibt."
+      }
+    }
+  }
+}

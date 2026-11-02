@@ -1,0 +1,97 @@
+{
+  "timezone": {
+    "name": "Fuseau horaire",
+    "description": "L’heure partout, la conversion entre fuseaux horaires et les dates de changement d’heure, à partir de questions simples comme « time in tokyo », « 5pm ET to PT » ou « when do the clocks change ».",
+    "copy": "Copier",
+    "copied": "Copié",
+    "title": {
+      "now": "Heure actuelle",
+      "zone": "Fuseau horaire",
+      "convert": "Conversion de fuseau horaire",
+      "diff": "Décalage horaire",
+      "dst": "Heure d’été"
+    },
+    "kicker": {
+      "now": "Heure locale",
+      "zone": "Nom du fuseau",
+      "convert": "Heure convertie",
+      "diff": "En ce moment",
+      "dst": "Changement d’heure"
+    },
+    "labels": {
+      "zone": "Fuseau horaire",
+      "offset": "Décalage UTC",
+      "dst": "Heure d’été",
+      "difference": "Décalage",
+      "home": "domicile",
+      "you": "vous",
+      "now": "En ce moment",
+      "next": "Prochain changement",
+      "then": "Ensuite",
+      "since": "Dernier changement"
+    },
+    "diff": {
+      "ahead": "{amount} d’avance sur {zone}",
+      "behind": "{amount} de retard sur {zone}",
+      "same": "Même heure que {zone}",
+      "headAhead": "{zone} a {amount} d’avance sur {base}",
+      "headBehind": "{zone} a {amount} de retard sur {base}",
+      "headSame": "{zone} a la même heure que {base}",
+      "changesAhead": "À partir du {date}, {zone} aura {amount} d’avance sur {base}.",
+      "changesBehind": "À partir du {date}, {zone} aura {amount} de retard sur {base}.",
+      "changesSame": "À partir du {date}, {zone} aura la même heure que {base}."
+    },
+    "dst": {
+      "headline": "{change} le {date}",
+      "forward": "On avance les horloges de {amount}",
+      "back": "On recule les horloges de {amount}",
+      "localShift": "{from} → {to} heure locale",
+      "until": "En vigueur jusqu’au {date}",
+      "starts": "Commence le {date}",
+      "notObserved": "Pas d’heure d’été",
+      "inEffect": "Heure d’été",
+      "standard": "Heure normale",
+      "none": "{zone} n’applique pas l’heure d’été",
+      "noneYear": "Aucun changement d’heure à {zone} en {year}",
+      "yearTitle": "Changements d’heure à {zone} en {year}",
+      "allYear": "{offset} toute l’année",
+      "statusYes": "Oui, l’heure d’été est en vigueur à {zone}",
+      "statusNo": "Non, {zone} est à l’heure normale",
+      "statusNone": "Non, {zone} n’applique pas l’heure d’été"
+    },
+    "note": {
+      "ambiguous": "{term} a été lu comme {zone}. Cela peut aussi désigner {alternatives}.",
+      "multiZone": "{place} compte plusieurs fuseaux horaires. Affichage de {zone}. Autres : {alternatives}.",
+      "abbrSeason": "{abbr} a été lu comme {zone}, qui est en {actual} à ce moment-là.",
+      "gapTime": "{time} n’existe pas à {zone} le {date}, car on avance les horloges de {amount}. Affichage de {shown} à la place.",
+      "ambiguousTime": "{time} arrive deux fois à {zone} le {date}, car on recule les horloges de {amount}. Affichage de la première."
+    },
+    "settings": {
+      "homeZone": {
+        "label": "Fuseau horaire de référence",
+        "placeholder": "Europe/Paris",
+        "description": "Utilisé quand une question ne nomme aucun fuseau, par exemple « 5pm ET » ou « when does the time change ». Accepte un fuseau IANA, une ville ou une abréviation. Vide signifie le fuseau du serveur. Les navigateurs le remplacent par leur propre fuseau, sauf si « Utiliser le fuseau du visiteur » est désactivé."
+      },
+      "timeFormat": {
+        "label": "Format de l’heure",
+        "description": "12 heures, 24 heures, ou selon la langue du visiteur en mode auto."
+      },
+      "showSeconds": {
+        "label": "Afficher les secondes",
+        "description": "Afficher les secondes sur l’horloge en direct."
+      },
+      "bareTriggers": {
+        "label": "Répondre aux requêtes courtes",
+        "description": "Afficher l’heure pour des requêtes de deux mots comme « tokyo time » ou « london timezone ». Les questions complètes comme « time in tokyo » fonctionnent toujours."
+      },
+      "browserZone": {
+        "label": "Utiliser le fuseau du visiteur",
+        "description": "Le navigateur ajoute l’heure du visiteur et utilise son fuseau au lieu du fuseau de référence. Rien n’est envoyé au serveur."
+      },
+      "onlineLookup": {
+        "label": "Chercher d’autres lieux en ligne",
+        "description": "Trouve les lieux qui ne sont pas intégrés, comme « current time foster city » ou « current time springfield il », avec le service de géocodage d’Open-Meteo. Seuls le nom du lieu et, s’il est indiqué, un code de pays sont envoyés, via la connexion sortante de degoog. Désactivé, tout reste sur le serveur."
+      }
+    }
+  }
+}

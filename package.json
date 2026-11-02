@@ -14,6 +14,14 @@
       "version": "1.0.0",
       "type": "slot",
       "minDegoogVersion": "1.1.0"
+    },
+    {
+      "path": "plugins/timezone",
+      "name": "Time zone",
+      "description": "Current time anywhere, time zone conversions and daylight saving dates, from plain questions such as “time in tokyo”, “5pm ET to PT” or “when do the clocks change”.",
+      "version": "1.0.0",
+      "type": "slot",
+      "minDegoogVersion": "1.1.0"
     }
   ]
 }

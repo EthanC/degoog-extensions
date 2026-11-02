@@ -1,0 +1,97 @@
+{
+  "timezone": {
+    "name": "Fuso orario",
+    "description": "L’ora ovunque, conversioni tra fusi orari e date del cambio dell’ora, a partire da domande semplici come “time in tokyo”, “5pm ET to PT” o “when do the clocks change”.",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "title": {
+      "now": "Ora attuale",
+      "zone": "Fuso orario",
+      "convert": "Conversione di fuso orario",
+      "diff": "Differenza di orario",
+      "dst": "Ora legale"
+    },
+    "kicker": {
+      "now": "Ora locale",
+      "zone": "Nome del fuso",
+      "convert": "Ora convertita",
+      "diff": "Adesso",
+      "dst": "Cambio dell’ora"
+    },
+    "labels": {
+      "zone": "Fuso orario",
+      "offset": "Scostamento UTC",
+      "dst": "Ora legale",
+      "difference": "Differenza",
+      "home": "casa",
+      "you": "tu",
+      "now": "Adesso",
+      "next": "Prossimo cambio",
+      "then": "Poi",
+      "since": "Ultimo cambio"
+    },
+    "diff": {
+      "ahead": "{amount} avanti rispetto a {zone}",
+      "behind": "{amount} indietro rispetto a {zone}",
+      "same": "Stessa ora di {zone}",
+      "headAhead": "{zone} è {amount} avanti rispetto a {base}",
+      "headBehind": "{zone} è {amount} indietro rispetto a {base}",
+      "headSame": "{zone} ha la stessa ora di {base}",
+      "changesAhead": "Dal {date}, {zone} sarà {amount} avanti rispetto a {base}.",
+      "changesBehind": "Dal {date}, {zone} sarà {amount} indietro rispetto a {base}.",
+      "changesSame": "Dal {date}, {zone} avrà la stessa ora di {base}."
+    },
+    "dst": {
+      "headline": "{change} il {date}",
+      "forward": "Gli orologi vanno avanti di {amount}",
+      "back": "Gli orologi vanno indietro di {amount}",
+      "localShift": "{from} → {to} ora locale",
+      "until": "In vigore fino al {date}",
+      "starts": "Inizia il {date}",
+      "notObserved": "Nessuna ora legale",
+      "inEffect": "Ora legale",
+      "standard": "Ora solare",
+      "none": "{zone} non adotta l’ora legale",
+      "noneYear": "Nessun cambio dell’ora a {zone} nel {year}",
+      "yearTitle": "Cambi dell’ora a {zone} nel {year}",
+      "allYear": "{offset} tutto l’anno",
+      "statusYes": "Sì, a {zone} è in vigore l’ora legale",
+      "statusNo": "No, a {zone} è in vigore l’ora solare",
+      "statusNone": "No, {zone} non adotta l’ora legale"
+    },
+    "note": {
+      "ambiguous": "{term} è stato interpretato come {zone}. Può indicare anche {alternatives}.",
+      "multiZone": "{place} ha più fusi orari. Viene mostrato {zone}. Altri: {alternatives}.",
+      "abbrSeason": "{abbr} è stato interpretato come {zone}, che in quel momento è in {actual}.",
+      "gapTime": "Le {time} non esistono a {zone} il {date}, perché gli orologi vanno avanti di {amount}. Viene mostrato {shown}.",
+      "ambiguousTime": "Le {time} si ripetono due volte a {zone} il {date}, perché gli orologi vanno indietro di {amount}. Viene mostrata la prima."
+    },
+    "settings": {
+      "homeZone": {
+        "label": "Fuso orario di casa",
+        "placeholder": "Europe/Rome",
+        "description": "Usato quando una domanda non nomina un fuso, per esempio “5pm ET” o “when does the time change”. Accetta un fuso IANA, una città o una sigla. Vuoto significa il fuso del server. I browser lo sostituiscono con il proprio fuso, a meno che “Usa il fuso del visitatore” sia disattivato."
+      },
+      "timeFormat": {
+        "label": "Formato dell’ora",
+        "description": "12 ore, 24 ore, oppure in base alla lingua del visitatore con auto."
+      },
+      "showSeconds": {
+        "label": "Mostra i secondi",
+        "description": "Mostra i secondi sull’orologio in tempo reale."
+      },
+      "bareTriggers": {
+        "label": "Rispondi alle ricerche brevi",
+        "description": "Mostra l’ora per ricerche di due parole come “tokyo time” o “london timezone”. Le domande complete come “time in tokyo” funzionano sempre."
+      },
+      "browserZone": {
+        "label": "Usa il fuso del visitatore",
+        "description": "Il browser aggiunge l’ora del visitatore e usa il suo fuso al posto di quello di casa. Nulla viene inviato al server."
+      },
+      "onlineLookup": {
+        "label": "Cerca altri luoghi online",
+        "description": "Trova i luoghi non inclusi, come “current time foster city” o “current time springfield il”, con il servizio di geocodifica di Open-Meteo. Viene inviato solo il nome del luogo e, se indicato, un codice del paese, tramite la connessione in uscita di degoog. Disattivato, tutto resta sul server."
+      }
+    }
+  }
+}
