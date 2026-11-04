@@ -1,0 +1,37 @@
+{
+  "orbis": {
+    "name": "Orbis Patches",
+    "description": "Looks up PlayStation 4 title IDs such as CUSA04762 or CUSA-04762 on ORBISPatches and shows the game's name, art and a link to its patch page.",
+    "platform": "PlayStation 4",
+    "iconAlt": "{name} icon",
+    "viewPage": "View patches on ORBISPatches",
+    "labels": {
+      "region": "Region",
+      "version": "Current Version",
+      "patchSize": "Latest patch"
+    },
+    "openArt": {
+      "icon": "Open the icon",
+      "background": "Open the background art",
+      "logo": "Open the logo"
+    },
+    "settings": {
+      "showIcon": {
+        "label": "Show icon",
+        "description": "Show the game's icon. Art is fetched by your degoog server, so visitors never contact ORBISPatches."
+      },
+      "showBackground": {
+        "label": "Show background art",
+        "description": "Show the game's background art as a banner above the title."
+      },
+      "showLogo": {
+        "label": "Show logo",
+        "description": "Show the game's logo on the background art, for titles that have one on ORBISPatches. Needs the background art turned on."
+      },
+      "showDetails": {
+        "label": "Show details",
+        "description": "List the region, current version and size of the latest patch."
+      }
+    }
+  }
+}

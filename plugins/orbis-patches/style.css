@@ -1,0 +1,182 @@
+.orbis-card {
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 100%;
+}
+
+.orbis-banner {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: var(--bg-light);
+  aspect-ratio: 16 / 9;
+  max-height: 200px;
+}
+
+.orbis-banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.orbis-background {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The logo link spans the logo's maximum area; only the logo itself takes clicks. */
+.orbis-logo-link {
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  width: 45%;
+  height: 55%;
+  pointer-events: none;
+}
+
+.orbis-logo {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 6px rgb(0 0 0 / 0.6));
+  pointer-events: auto;
+}
+
+.orbis-icon-link {
+  flex: 0 0 auto;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.orbis-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.orbis-icon {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 0.5rem;
+  background: var(--bg-light);
+  object-fit: cover;
+}
+
+.orbis-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.orbis-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.orbis-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.orbis-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-primary);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.orbis-name:hover,
+.orbis-name:focus-visible {
+  text-decoration: underline;
+}
+
+.orbis-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+}
+
+.orbis-detail {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.orbis-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.orbis-value {
+  margin: 0;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.orbis-more {
+  align-self: flex-start;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.orbis-more:hover,
+.orbis-more:focus-visible {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.orbis-more i {
+  font-size: 0.75em;
+}
+
+@media (max-width: 480px) {
+  .orbis-head {
+    gap: 0.75rem;
+  }
+
+  .orbis-logo-link {
+    width: 55%;
+    height: 60%;
+  }
+
+  .orbis-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .orbis-name {
+    font-size: 1.15rem;
+  }
+}

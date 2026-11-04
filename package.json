@@ -23,6 +23,14 @@
       "version": "1.0.0",
       "type": "slot",
       "minDegoogVersion": "1.1.0"
+    },
+    {
+      "path": "plugins/orbis-patches",
+      "name": "Orbis Patches",
+      "description": "Looks up PlayStation 4 title IDs such as CUSA04762 or CUSA-04762 on ORBISPatches and shows the game’s name, art and a link to its patch page.",
+      "version": "1.0.0",
+      "type": "slot",
+      "minDegoogVersion": "1.1.0"
     }
   ]
 }

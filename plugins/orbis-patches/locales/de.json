@@ -1,0 +1,37 @@
+{
+  "orbis": {
+    "name": "Orbis Patches",
+    "description": "Sucht PlayStation-4-Title-IDs wie CUSA04762 oder CUSA-04762 auf ORBISPatches und zeigt Namen, Artwork und einen Link zur Patch-Seite des Spiels.",
+    "platform": "PlayStation 4",
+    "iconAlt": "Symbol von {name}",
+    "viewPage": "Patches auf ORBISPatches ansehen",
+    "labels": {
+      "region": "Region",
+      "version": "Aktuelle Version",
+      "patchSize": "Neuester Patch"
+    },
+    "openArt": {
+      "icon": "Symbol öffnen",
+      "background": "Hintergrundbild öffnen",
+      "logo": "Logo öffnen"
+    },
+    "settings": {
+      "showIcon": {
+        "label": "Symbol anzeigen",
+        "description": "Zeigt das Symbol des Spiels. Das Artwork lädt dein degoog-Server, Besucher kontaktieren ORBISPatches also nie."
+      },
+      "showBackground": {
+        "label": "Hintergrundbild anzeigen",
+        "description": "Zeigt das Hintergrundbild des Spiels als Banner über dem Titel."
+      },
+      "showLogo": {
+        "label": "Logo anzeigen",
+        "description": "Zeigt das Logo des Spiels auf dem Hintergrundbild, sofern ORBISPatches eines hat. Dafür muss das Hintergrundbild aktiviert sein."
+      },
+      "showDetails": {
+        "label": "Details anzeigen",
+        "description": "Listet Region, aktuelle Version und Größe des neuesten Patches auf."
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "orbis": {
+    "name": "Orbis Patches",
+    "description": "Recherche les identifiants de jeux PlayStation 4 comme CUSA04762 ou CUSA-04762 sur ORBISPatches et affiche le nom du jeu, ses visuels et un lien vers sa page de mises à jour.",
+    "platform": "PlayStation 4",
+    "iconAlt": "Icône de {name}",
+    "viewPage": "Voir les mises à jour sur ORBISPatches",
+    "labels": {
+      "region": "Région",
+      "version": "Version actuelle",
+      "patchSize": "Dernière mise à jour"
+    },
+    "openArt": {
+      "icon": "Ouvrir l’icône",
+      "background": "Ouvrir l’image de fond",
+      "logo": "Ouvrir le logo"
+    },
+    "settings": {
+      "showIcon": {
+        "label": "Afficher l’icône",
+        "description": "Affiche l’icône du jeu. Les visuels sont récupérés par votre serveur degoog, les visiteurs ne contactent donc jamais ORBISPatches."
+      },
+      "showBackground": {
+        "label": "Afficher l’image de fond",
+        "description": "Affiche l’image de fond du jeu en bannière au-dessus du titre."
+      },
+      "showLogo": {
+        "label": "Afficher le logo",
+        "description": "Affiche le logo du jeu sur l’image de fond, pour les jeux qui en ont un sur ORBISPatches. Nécessite l’image de fond."
+      },
+      "showDetails": {
+        "label": "Afficher les détails",
+        "description": "Indique la région, la version actuelle et la taille de la dernière mise à jour."
+      }
+    }
+  }
+}

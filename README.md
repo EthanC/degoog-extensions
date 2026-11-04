@@ -16,6 +16,7 @@ Extensions for [degoog](https://github.com/degoog-org/degoog) search.
 | --- | --- | --- |
 | [Timestamp](plugins/timestamp) | slot | Converts Unix timestamps into human readable UTC and local dates, and dates back into timestamps. Triggers on bare timestamps, ISO dates and keywords such as `epoch` or `unix time`. |
 | [Time zone](plugins/timezone) | slot | Current time anywhere, time zone conversions and daylight saving dates, from plain questions such as `time in tokyo`, `5pm ET to PT` or `when do the clocks change`. |
+| [Orbis Patches](plugins/orbis-patches) | slot | Looks up PlayStation 4 title IDs such as `CUSA04762` or `CUSA-04762` on ORBISPatches and shows the game’s name, art and a link to its patch page. |
 
 ## Development
 
