@@ -153,7 +153,7 @@ degoog runs extensions in-process with no sandbox, and some instances are public
 
 ### Testing against a live instance
 
-Ask the user for the instance URL and credentials. Never write them into the repository.
+Read the instance URL and admin password from the git-ignored `.env` at the repository root (`DEGOOG_URL`, which may lack a scheme, and `DEGOOG_PASSWORD`), for example with `node --env-file=.env`. Never print them. If `.env` is missing, ask the user. Never write them into a tracked file.
 
 - **Slots are public endpoints.** Exercise them with `POST /api/slots/glance` for at-a-glance slots, or `POST /api/slots` for other positions. Send the body `{"query": "...", "type": "web"}` and an `Accept-Language` header. `/api/search` and search-only integrations built on it never return slot panels.
 - **Send non-ASCII test queries from Node `fetch`**, not Git Bash `curl`. Git Bash re-encodes arguments for native Windows programs, which turns `µ` and `’` into U+FFFD and looks exactly like a server bug.
@@ -167,7 +167,8 @@ The Store installs only from git URLs that support shallow clones (`git clone --
 1. Copy the repository files into a scratch folder, `git init`, commit, then `git clone --bare` into `<root>/<github-user>/<repo>-dev.git`.
 2. Serve that bare repository read-only over git's smart HTTP protocol. A small Node server that pipes requests to `git http-backend` (CGI) works: set `GIT_PROJECT_ROOT` and `GIT_HTTP_EXPORT_ALL`, pass the `HTTP_*` headers through, and refuse `git-receive-pack`. Agent sandboxes usually forbid starting LAN-facing servers, so either give the user the command to run, or, with shell access to the host, copy the bare repository into the degoog container and serve it on `127.0.0.1` there (the Store accepts that URL). The official image's git has no `http-backend`, so answer `GET info/refs?service=git-upload-pack` with a `# service=git-upload-pack` pkt-line, a flush and `git upload-pack --stateless-rpc --advertise-refs`, and pipe `POST git-upload-pack` (gunzip it if `Content-Encoding: gzip`) through `git upload-pack --stateless-rpc`. Pass `Git-Protocol` on as `GIT_PROTOCOL`, and skip the service line for protocol v2. Don't stop it with `pkill -f <script>` inside `sh -c`, which matches and kills that shell too.
 3. Add it with `POST /api/store/repos {"url"}`, then install with `POST /api/store/install {"repoUrl", "itemPath", "type": "plugin"}`. Because the URL path differs, it installs as a separate plugin (`…-dev-<name>`).
-4. **Always clean up.** Uninstall with `POST /api/store/uninstall` using the same body, remove the repository with `DELETE /api/store/repos {"url"}`, and confirm the panel, script and CSS are gone. Also stop any server you started in the container and delete its files. Otherwise the panel shows twice once the real install exists.
+4. **Let the user test.** After your own checks and screenshots, leave the dev install and its git server running, tell the user it is ready, and wait until they say they are done. Don't uninstall it in the same turn. To pick up changes meanwhile, rebuild the bare repository, copy it in again and reinstall.
+5. **Then always clean up.** Uninstall with `POST /api/store/uninstall` using the same body, remove the repository with `DELETE /api/store/repos {"url"}`, and confirm the panel, script and CSS are gone. Also stop any server you started in the container and delete its files. Otherwise the panel shows twice once the real install exists.
 
 ### Visual checks and Store screenshots
 
@@ -188,7 +189,7 @@ The Store installs only from git URLs that support shallow clones (`git clone --
 2. The `version` in `package.json` is bumped. Bump `minDegoogVersion` only if you used newer core APIs.
 3. Locales have matching keys. Every user-facing string in `index.js` goes through `slot.t` or `{{ t:… }}`.
 4. If the UI changed, it was checked live, in both themes and at mobile width. Refresh the screenshots if needed.
-5. Any dev sideload is uninstalled and its repository removed.
+5. The user has finished testing the dev sideload, and it is then uninstalled, its repository removed and its server stopped.
 6. Commit with a Conventional Commit message. Push only when the user asks. The GitHub repository must be public for the Store to clone it.
 7. `AGENTS.md` is updated if this change taught you anything a future agent would need. See below.
 
