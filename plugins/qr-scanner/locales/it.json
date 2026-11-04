@@ -1,0 +1,45 @@
+{
+  "qrscan": {
+    "name": "Lettore di codici QR",
+    "description": "Legge i codici QR da un’immagine che scegli, incolli, trascini o di cui dai il link.",
+    "title": "Lettore di codici QR",
+    "drop": {
+      "label": "Scegli l’immagine di un codice QR",
+      "title": "Trascina, incolla o scegli l’immagine di un codice QR",
+      "hint": "Le immagini restano nel tuo browser e non vengono mai caricate."
+    },
+    "browse": "Sfoglia",
+    "url": {
+      "label": "URL di un’immagine, SVG o immagine base64",
+      "placeholder": "Oppure incolla un URL, un SVG o un base64"
+    },
+    "scan": "Leggi",
+    "again": "Leggi un’altra immagine",
+    "previewAlt": "L’immagine letta",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "open": "Apri il link",
+    "status": {
+      "loading": "Caricamento dell’immagine…",
+      "decoding": "Ricerca di un codice QR…",
+      "noCode": "Nessun codice QR trovato in questa immagine. Prova con una foto più nitida o più vicina.",
+      "loadFailed": "Impossibile caricare l’immagine.",
+      "notImage": "Questo file non è un’immagine.",
+      "tooLarge": "L’immagine è troppo grande. Il limite è 25 MB.",
+      "badUrl": "Questo non è l’URL di un’immagine, un SVG o un’immagine base64. I link devono iniziare con http:// o https://.",
+      "urlsOff": "La lettura dei link alle immagini è disattivata su questa istanza. Scarica l’immagine e trascinala qui.",
+      "expired": "Questo lettore è aperto da troppo tempo. Ripeti la ricerca per leggere i link alle immagini.",
+      "foundMany": "Trovati {count} codici QR."
+    },
+    "settings": {
+      "bareQr": {
+        "label": "Mostra per un semplice «qr»",
+        "description": "Mostra il lettore quando la ricerca è solo «qr» o «qr code». Ricerche come «leggi codice qr» o «scansiona qr» lo mostrano sempre."
+      },
+      "imageUrls": {
+        "label": "Leggi i link alle immagini",
+        "description": "Carica le immagini dai link tramite il proxy delle immagini di degoog, che rifiuta gli indirizzi privati e tutto ciò che non è un’immagine. Disattivalo su un’istanza pubblica per evitare che i visitatori usino il proxy per immagini qualsiasi. File, immagini incollate, SVG e base64 funzionano comunque."
+      }
+    }
+  }
+}

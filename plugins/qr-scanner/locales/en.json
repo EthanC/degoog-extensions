@@ -1,0 +1,45 @@
+{
+  "qrscan": {
+    "name": "QR Code Scanner",
+    "description": "Reads QR codes from an image you browse for, paste, drag in or link to.",
+    "title": "QR Code Scanner",
+    "drop": {
+      "label": "Choose an image of a QR code",
+      "title": "Drop, paste or browse for an image of a QR code",
+      "hint": "Images stay in your browser and are never uploaded."
+    },
+    "browse": "Browse",
+    "url": {
+      "label": "Image URL, SVG or base64 image",
+      "placeholder": "Or paste an image URL, SVG or base64"
+    },
+    "scan": "Scan",
+    "again": "Scan another image",
+    "previewAlt": "The scanned image",
+    "copy": "Copy",
+    "copied": "Copied",
+    "open": "Open link",
+    "status": {
+      "loading": "Loading the image…",
+      "decoding": "Looking for a QR code…",
+      "noCode": "No QR code found in this image. Try a sharper or closer picture.",
+      "loadFailed": "Couldn’t load that image.",
+      "notImage": "That file isn’t an image.",
+      "tooLarge": "That image is too large. The limit is 25 MB.",
+      "badUrl": "That isn’t an image URL, SVG or base64 image. Links must start with http:// or https://.",
+      "urlsOff": "Scanning image links is turned off on this instance. Download the image and drop it here instead.",
+      "expired": "This scanner has been open too long. Search again to scan image links.",
+      "foundMany": "Found {count} QR codes."
+    },
+    "settings": {
+      "bareQr": {
+        "label": "Show for a plain “qr”",
+        "description": "Show the scanner when the whole search is just “qr” or “qr code”. Searches such as “qr code reader” or “scan qr” always show it."
+      },
+      "imageUrls": {
+        "label": "Scan image links",
+        "description": "Load images from links through degoog’s image proxy, which refuses private addresses and anything that isn’t an image. Turn this off on a public instance to keep visitors from using the proxy for arbitrary images. Files, pasted images, SVG and base64 still work."
+      }
+    }
+  }
+}

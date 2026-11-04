@@ -1,0 +1,23 @@
+<div class="qrscan-card" data-qrscan-card data-qrscan-src="{{src}}" data-qrscan-sign="{{signUrl}}" data-qrscan-decoder="{{decoderUrl}}" data-qrscan-key="{{key}}" {{messages}}>
+  <div class="qrscan-drop degoog-file" data-qrscan-drop role="button" tabindex="0" aria-label="{{dropLabel}}">
+    <i class="fa-solid fa-qrcode qrscan-drop-icon" aria-hidden="true"></i>
+    <div class="qrscan-drop-text">
+      <span class="qrscan-drop-title">{{dropTitle}}</span>
+      <span class="qrscan-drop-hint">{{dropHint}}</span>
+    </div>
+    <span class="qrscan-browse degoog-btn degoog-btn--primary" aria-hidden="true">{{browse}}</span>
+    <input class="qrscan-file" data-qrscan-file type="file" accept="image/*" tabindex="-1" aria-hidden="true">
+  </div>
+  <div class="qrscan-url">
+    <input class="qrscan-url-input degoog-input" data-qrscan-url type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="{{urlPlaceholder}}" aria-label="{{urlLabel}}" value="{{urlValue}}">
+    <button type="button" class="qrscan-scan degoog-btn" data-qrscan-scan>{{scan}}</button>
+  </div>
+  <div class="qrscan-status" data-qrscan-status data-qrscan-kind="{{statusKind}}" role="status" aria-live="polite">{{status}}</div>
+  <div class="qrscan-result" data-qrscan-result hidden>
+    <img class="qrscan-preview" data-qrscan-preview alt="{{previewAlt}}" decoding="async">
+    <div class="qrscan-output">
+      <ul class="qrscan-codes" data-qrscan-codes></ul>
+      <button type="button" class="qrscan-again degoog-btn degoog-btn--sm" data-qrscan-reset>{{again}}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,184 @@
+.qrscan-card {
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 100%;
+}
+
+.qrscan-command {
+  padding-top: 0;
+}
+
+.qrscan-drop {
+  cursor: pointer;
+  flex-wrap: nowrap;
+  outline: 2px dashed transparent;
+  outline-offset: -2px;
+  transition: background 0.15s ease, outline-color 0.15s ease;
+}
+
+.qrscan-drop:hover {
+  background: var(--bg-hover, var(--bg-light));
+}
+
+.qrscan-drop:focus-visible,
+.qrscan-drop.qrscan-drop--over {
+  outline-color: var(--border-light, var(--text-secondary));
+}
+
+.qrscan-drop-icon {
+  flex: 0 0 auto;
+  font-size: 1.75rem;
+  color: var(--text-secondary);
+}
+
+.qrscan-drop-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.qrscan-drop-title {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.qrscan-drop-hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.qrscan-browse {
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+
+.qrscan-file {
+  display: none;
+}
+
+.qrscan-url {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.qrscan-url-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Same field background as degoog's file picker and buttons, so it reads as an input inside the panel. */
+  background: var(--bg);
+}
+
+.qrscan-scan {
+  flex: 0 0 auto;
+}
+
+.qrscan-status {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.qrscan-status:empty {
+  display: none;
+}
+
+.qrscan-status[data-qrscan-kind="error"] {
+  color: var(--danger, var(--text-primary));
+}
+
+.qrscan-result {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.qrscan-result[hidden] {
+  display: none;
+}
+
+.qrscan-preview {
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  background: var(--bg-light);
+}
+
+.qrscan-output {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.qrscan-codes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qrscan-code {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.qrscan-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 12rem;
+  margin: 0;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.qrscan-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.qrscan-actions .degoog-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.qrscan-copy.qrscan-copy--done {
+  color: var(--success, var(--primary));
+}
+
+@media (max-width: 480px) {
+  .qrscan-drop-icon {
+    font-size: 1.4rem;
+  }
+
+  .qrscan-browse {
+    display: none;
+  }
+
+  .qrscan-preview {
+    width: 64px;
+    height: 64px;
+  }
+}

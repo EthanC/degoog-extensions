@@ -1,0 +1,45 @@
+{
+  "qrscan": {
+    "name": "Lecteur de QR code",
+    "description": "Lit les QR codes d’une image que vous choisissez, collez, glissez ou dont vous donnez le lien.",
+    "title": "Lecteur de QR code",
+    "drop": {
+      "label": "Choisir l’image d’un QR code",
+      "title": "Déposez, collez ou choisissez l’image d’un QR code",
+      "hint": "Les images restent dans votre navigateur et ne sont jamais envoyées."
+    },
+    "browse": "Parcourir",
+    "url": {
+      "label": "URL d’image, SVG ou image en base64",
+      "placeholder": "Ou collez une URL d’image, un SVG ou du base64"
+    },
+    "scan": "Lire",
+    "again": "Lire une autre image",
+    "previewAlt": "L’image lue",
+    "copy": "Copier",
+    "copied": "Copié",
+    "open": "Ouvrir le lien",
+    "status": {
+      "loading": "Chargement de l’image…",
+      "decoding": "Recherche d’un QR code…",
+      "noCode": "Aucun QR code trouvé dans cette image. Essayez une photo plus nette ou plus proche.",
+      "loadFailed": "Impossible de charger cette image.",
+      "notImage": "Ce fichier n’est pas une image.",
+      "tooLarge": "Cette image est trop lourde. La limite est de 25 Mo.",
+      "badUrl": "Ce n’est ni une URL d’image, ni un SVG, ni une image en base64. Les liens doivent commencer par http:// ou https://.",
+      "urlsOff": "La lecture des liens d’images est désactivée sur cette instance. Téléchargez l’image et déposez-la ici.",
+      "expired": "Ce lecteur est ouvert depuis trop longtemps. Relancez la recherche pour lire des liens d’images.",
+      "foundMany": "{count} QR codes trouvés."
+    },
+    "settings": {
+      "bareQr": {
+        "label": "Afficher pour un simple « qr »",
+        "description": "Affiche le lecteur quand la recherche est seulement « qr » ou « qr code ». Les recherches comme « lire qr code » ou « scanner qr » l’affichent toujours."
+      },
+      "imageUrls": {
+        "label": "Lire les liens d’images",
+        "description": "Charge les images des liens via le proxy d’images de degoog, qui refuse les adresses privées et tout ce qui n’est pas une image. Désactivez-le sur une instance publique pour que les visiteurs n’utilisent pas le proxy pour n’importe quelle image. Les fichiers, images collées, SVG et base64 fonctionnent toujours."
+      }
+    }
+  }
+}

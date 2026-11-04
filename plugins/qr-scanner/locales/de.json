@@ -1,0 +1,45 @@
+{
+  "qrscan": {
+    "name": "QR-Code-Scanner",
+    "description": "Liest QR-Codes aus einem Bild, das du auswählst, einfügst, hineinziehst oder verlinkst.",
+    "title": "QR-Code-Scanner",
+    "drop": {
+      "label": "Bild eines QR-Codes auswählen",
+      "title": "Bild eines QR-Codes ablegen, einfügen oder auswählen",
+      "hint": "Bilder bleiben in deinem Browser und werden nie hochgeladen."
+    },
+    "browse": "Durchsuchen",
+    "url": {
+      "label": "Bild-URL, SVG oder Base64-Bild",
+      "placeholder": "Oder Bild-URL, SVG oder Base64 einfügen"
+    },
+    "scan": "Scannen",
+    "again": "Weiteres Bild scannen",
+    "previewAlt": "Das gescannte Bild",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "open": "Link öffnen",
+    "status": {
+      "loading": "Bild wird geladen…",
+      "decoding": "QR-Code wird gesucht…",
+      "noCode": "In diesem Bild wurde kein QR-Code gefunden. Versuche ein schärferes oder näheres Bild.",
+      "loadFailed": "Das Bild konnte nicht geladen werden.",
+      "notImage": "Diese Datei ist kein Bild.",
+      "tooLarge": "Das Bild ist zu groß. Die Grenze liegt bei 25 MB.",
+      "badUrl": "Das ist weder eine Bild-URL noch ein SVG- oder Base64-Bild. Links müssen mit http:// oder https:// beginnen.",
+      "urlsOff": "Das Scannen von Bild-Links ist auf dieser Instanz ausgeschaltet. Lade das Bild herunter und lege es hier ab.",
+      "expired": "Dieser Scanner ist schon zu lange offen. Suche erneut, um Bild-Links zu scannen.",
+      "foundMany": "{count} QR-Codes gefunden."
+    },
+    "settings": {
+      "bareQr": {
+        "label": "Bei einem einfachen „qr“ anzeigen",
+        "description": "Zeigt den Scanner, wenn die Suche nur „qr“ oder „qr code“ lautet. Suchen wie „qr code lesen“ oder „qr scannen“ zeigen ihn immer."
+      },
+      "imageUrls": {
+        "label": "Bild-Links scannen",
+        "description": "Lädt Bilder aus Links über den Bild-Proxy von degoog, der private Adressen und alles außer Bildern ablehnt. Schalte das auf einer öffentlichen Instanz aus, damit Besucher den Proxy nicht für beliebige Bilder nutzen. Dateien, eingefügte Bilder, SVG und Base64 funktionieren weiterhin."
+      }
+    }
+  }
+}

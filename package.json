@@ -39,6 +39,14 @@
       "version": "1.0.0",
       "type": "slot",
       "minDegoogVersion": "1.1.0"
+    },
+    {
+      "path": "plugins/qr-scanner",
+      "name": "QR Code Scanner",
+      "description": "Reads QR codes from an image you browse for, paste, drag in or link to, from searches such as “qr code reader” or the !qrscan bang. Images are decoded in your browser.",
+      "version": "1.0.0",
+      "type": "slot",
+      "minDegoogVersion": "1.1.0"
     }
   ]
 }
