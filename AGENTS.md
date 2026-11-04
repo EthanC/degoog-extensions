@@ -60,12 +60,12 @@ plugins/<name>/
 ### Choosing the extension type
 
 - **Slot** (`export const slot = {...}`). A panel the user did not explicitly ask for, chosen by `trigger(query)`. Use this for anything "triggered by keywords, not a command". Positions: `at-a-glance`, `above-results`, `below-results`, `full-width-above-results`, `above-sidebar`, `below-sidebar`, `knowledge-panel`. List the allowed ones in `slotPositions` to give users a Position setting.
-- **Command** (`export default { trigger: "name", execute(args) }`). A `!bang` the user types on purpose. `naturalLanguagePhrases` adds phrase triggers.
+- **Command** (`export default { name, trigger: "name", execute(args) }`). A `!bang` the user types on purpose. `naturalLanguagePhrases` are off until the user enables them per command, and they route on the query's first word, so for keyword triggers use a slot and keep the command for the bang. One `index.js` can export both (see "Command contract details").
 - **Interceptor, search tab, middleware, routes.** See degoog's `src/server/types/extension.ts` for the shapes.
 
 ### Slot contract details that are not in the docs
 
-- **Module shape.** The registry accepts `slot`, `slotPlugin` or `default.slot` exports. Validation needs `name`, a valid `position`, and `trigger` and `execute` functions. Export `default { slot }` as well, like the official plugins do.
+- **Module shape.** The registry accepts `slot`, `slotPlugin` or `default.slot` exports. Validation needs `name`, a valid `position`, and `trigger` and `execute` functions. Export `default { slot }` as well, like the official plugins do, unless the module also has a command: then `default` must be the command.
 - **Ids are overwritten.** After loading, degoog sets `slot.id` to the canonical id `<installed-folder>-slot`, for example `<github-user>-degoog-extensions-timestamp-slot`. Settings are stored under that id.
 - **Locale lookups for name and settings mostly miss.** degoog looks up `<canonical-id>.name`, `<canonical-id>.description` and `<canonical-id>.settings.<key>.label`. A locale file keyed by a short name like `timestamp` never matches those for Store installs. The English `name`, `description` and `settingsSchema` labels in `index.js` are therefore what users see, so write them properly. Keep the locale `settings` blocks anyway, for parity with the official extensions.
 - **Your own strings do translate.** Call `slot.t(key, vars, locale)` (degoog sets `slot.t` from your `locales/`), or put `{{ t:ns.key }}` in returned HTML. Use `context.locale`, which is the first entry of the request's `Accept-Language`. Pick a top-level namespace in your locale files (for example `"timestamp": {...}`) and prefix every key with it.
@@ -75,11 +75,23 @@ plugins/<name>/
 - **No-JS page.** The `/nojs` page only runs slots with `supportsNojs: true`, and passes `context.nojs`. Leave out JS-only controls in that mode.
 - **`isClientExposed`** must be a boolean. Use `false` when all traffic goes through the server. It drives a privacy indicator in settings.
 - **Settings.** `settingsSchema` field values arrive in `configure(settings)` as **strings**, toggles included (`"true"`/`"false"`). Parse defensively and clamp. Reserved keys: `disabled`, `slotPosition`, `slotSearchTypes`, `priority`, `score`, `outgoingTransport`, `searchTypeOverride`, `theme`, `shortcuts`.
-- **`init(ctx)`.** It runs once per loaded module, with `ctx.template`, `ctx.fetch` (proxy-aware), `ctx.useCache(ns, ttlMs)`, `ctx.readFile(name)` (reads a file from the plugin folder, relative path), `ctx.signProxyUrl` and `ctx.apiBase`.
+- **`init(ctx)`.** It runs once per loaded module, with `ctx.template`, `ctx.fetch` (proxy-aware), `ctx.useCache(ns, ttlMs)`, `ctx.readFile(name)` (reads a UTF-8 file from the plugin folder, subfolders included), `ctx.signProxyUrl` and `ctx.apiBase`.
 - **Keep `index.js` a single file.** degoog imports the entry by `file://` URL (`src/server/extensions/registry-factory.ts`), so `import "./x.js"` resolves. A reload re-imports only the entry, with `?r=<n>` appended, so sibling modules stay cached and go stale.
 - **Plugin routes next to a slot.** `export const routes = [{ method, path, handler(request), rateLimit }]` in the same `index.js` (and in `default`). The route loader imports the same URL as the slot registry, so handlers share module state with the slot, including the `ctx.fetch` saved in `init`. Paths match exactly (`src/server/extensions/plugin-routes/registry.ts`), so pass parameters in the query string. Routes answer 403 while the plugin is disabled. `plugins/orbis-patches` serves art this way.
 - **`ctx.apiBase` has no base path.** It is `/api/plugin/<installed-folder>` even when `DEGOOG_BASE_URL` has a path (v1.1.1, `plugin-assets.ts`), unlike `signProxyUrl` URLs. Add the path yourself when putting route URLs into HTML.
 - **Accept a test clock.** Anything time-dependent should read `context.now` when it is a finite number and `Date.now()` otherwise. degoog never sets it, and tests get deterministic output.
+
+### Command contract details that are not in the docs
+
+Verified against degoog 1.1.1 (`src/server/extensions/commands/registry.ts`, `src/server/routes/extensions/commands.ts`, `src/client/utils/search/actions/search-actions-perform.tsx`).
+
+- **Module shape.** The registry takes `mod.default ?? mod.command ?? mod.Command` and needs `name`, `trigger` and `execute`. A default export that is not a command (such as `{ slot }`) fails validation and the command silently doesn't load.
+- **Rendering.** For a bang, `html` replaces the results list, the at-a-glance box, sidebar and slot panels are cleared, and `title` goes above it. With natural language the HTML goes into at-a-glance instead. Wrap it in `<div class="command-result">` like the official commands.
+- **Translations.** degoog fills `{{ t:ns.key }}` in `html` but **not** in `title`, and commands get no `context.locale`. Use a plain-text title. Placeholders are inserted unescaped, so keep locale strings free of `<`, `>`, `"` and `&`, and test that.
+- **Trigger clashes.** Built-ins load first, then plugin folders in name order, and the first owner of a trigger wins. A later duplicate is dropped with only a debug log. Aliases are **not** de-duplicated, so a later alias silently takes over another plugin's trigger. Check degoog-org/official-extensions before choosing one (its QR generator owns `!qr` and `!qrcode`).
+- **Context.** `init(ctx)` gets the same `PluginContext` as slots. `execute(args, context)` gets `signProxyUrl`, `clientIp`, `page`, `searchType` and `nojs`.
+- **Slot and command in one module.** The slot, command and route registries each read their own export from the same module, so they share module state. They get separate settings entries (`<folder>-slot`, `<folder>-command`) and `init` runs once per object. `style.css` is registered for both. `script.js` is injected once, with the command's `t` namespace. `plugins/qr-scanner` does this.
+- **Testing.** `POST /api/command {"query": "!name args", "type": "web"}` runs a bang and is public.
 
 ### Client scripts (`script.js`)
 
@@ -89,6 +101,9 @@ plugins/<name>/
 - **Plain-HTTP instances.** On plain-HTTP origins, typical for LAN instances, `navigator.clipboard` is `undefined`. Always keep a fallback that copies through a hidden textarea and `execCommand("copy")`.
 - **Labels.** Remember an element's original label before changing it (for example "Copy" to "Copied"). Clear pending reset timers on repeat clicks, or the label sticks.
 - **`t(key, vars)`** interpolates `{name}` placeholders from an object and returns the key itself when it is missing (degoog `src/public/t.js`). Treat `t(key) === key` as "no translations" and keep the server's text.
+- **Your own paste and drop handling.** degoog's image-search bar listens for `paste`, `drop` and `dragover` on `document` in the capture phase. Listen on `window` in the capture phase instead, act only on events aimed at your panel, and call `preventDefault()` plus `stopImmediatePropagation()` on those.
+- **Content Security Policy.** When an admin turns on `blockClientLeaks`, degoog enforces `connect-src 'self'`, so browser `fetch()` to other hosts fails, and so can `fetch("data:…")`. `img-src` and `worker-src` allow `blob:` and `data:`. Decode data URLs yourself with `atob` and route remote images through the server (`src/server/utils/security/content-policy.ts`).
+- **Big libraries.** `script.js` is injected as a module on every page, so keep it small. Serve a vendored library from a plugin route via `ctx.readFile`, and load it with a `<script>` tag the first time it is needed. Vendor it unmodified, with its licence, and pin its SHA-256 in a test. `plugins/qr-scanner` serves jsQR this way.
 - **Sharing code with `index.js`.** `script.js` cannot import anything. When the browser needs the server's logic, mark the block in both files and add a test that the two copies match. `plugins/timezone` does this with `// <shared-core>` markers.
 
 ### Styling
@@ -109,6 +124,8 @@ A slot that fires on the wrong query hijacks someone's search, so treat false po
 - **Respect bare-input toggles.** Give users a toggle for "bare" triggers, such as a lone number or a lone date, but don't let it disable explicit forms like a keyword or a unit.
 - **Check `Date.UTC` years.** It maps years 0 to 99 to 1900 to 1999. Build dates with `new Date(0)` plus `setUTCFullYear(y, m, d)` plus `setUTCHours`, and validate by reading the fields back.
 - **Return null when unsure.** It's better to show no panel than a wrong one.
+- **Keep `trigger` linear and cheap.** Anyone can send a multi-megabyte query to the public slot endpoints, and `trigger` runs synchronously on every search. An unanchored regex such as `<svg[\s>][\s\S]*<\/svg>` took 0.5 s on 80 KB, and the time grew quadratically. Find markup with `indexOf`/`lastIndexOf`, bound any backward scans, and leave expensive work such as encoding to `execute`. Add a timing test that grows the input 8x.
+- **A link is not automatically the thing to act on.** `qr code https://example.com` asks for a code for that site. Treat a URL as an image only when its path has an image extension or the query says scan or read.
 - **Consume every token.** For natural-language triggers, classify each token (zone, time, connector, filler and so on) and return null on any unknown word. That rejects `time in a bottle` or `paris time lapse` without a blacklist.
 - **Gate short ambiguous words on context.** Two-letter abbreviations such as `et` or `pt` should only count next to a time, a connector or another zone, otherwise `ct scan` and `pt cruiser` trigger. Test that no single-word lookup key equals a grammar word.
 
@@ -133,10 +150,12 @@ degoog runs extensions in-process with no sandbox, and some instances are public
 - **Never put user input into `<script>`** or inline event handlers. Use `data-*` attributes plus `script.js`.
 - **Make outgoing requests through `ctx.fetch` or `context.fetch`**, never global `fetch`. Proxy and transport settings then still apply, and the visitor's IP never reaches third parties. Prefer extensions that make no network calls at all.
 - **Proxy third-party images.** Slot HTML on the normal page is not rewritten, so a raw `<img src="https://…">` sends the visitor's IP to that host (only `/nojs` runs `proxyHtmlImages`). Use `context.signProxyUrl(url)`, which goes through `/api/proxy/image`. That proxy refuses responses without an image `Content-Type` (`src/server/routes/proxy.ts`), so for hosts that omit it, serve the image from a plugin route that sniffs the magic bytes and only fetches URLs on the expected host.
+- **`ctx.fetch` has no private-address guard.** It only applies `DEGOOG_OUTGOING_ALLOWED_HOSTS`, so never fetch a URL the visitor supplied with it. Pass it through `signProxyUrl` instead. degoog's image proxy resolves DNS and refuses private, loopback and link-local addresses on every redirect, caps at 25 MB and only passes images (`src/server/utils/security/ssrf.ts`). The result is same-origin, so a canvas that draws it stays readable. Some hosts refuse the proxy: Wikimedia's upload servers answer it with a 502.
 - **When a lookup must go online**, send only the fragment it needs, such as a place name, never the whole query. Do it from `execute`, never from `trigger`. Gate it behind a setting, cache the answers, and say in the README exactly what is sent and where. `plugins/timezone` does this for places that are not built in.
 - **Don't log, store or send queries anywhere.** degoog's privacy model allows exactly two places that keep queries: the search cache and the opt-in indexer.
 - **Mark secret settings** with `type: "password"` and `secret: true`, so they are never sent to the browser.
 - **Plugin routes** (`export const routes`) are public unless you check auth. Never use GET for anything that mutates state.
+- **Never offer `signProxyUrl` as a service.** A route that signs any URL it is given turns degoog's image proxy into an open proxy. If a panel must sign URLs the visitor enters, issue a short-lived HMAC token with the panel (`node:crypto` works in Node and Bun), require it in the route, and give admins a setting to turn link fetching off. A bang that signs its argument is public too, so document that. `plugins/qr-scanner` does this.
 
 ## Testing
 
@@ -167,7 +186,7 @@ The Store installs only from git URLs that support shallow clones (`git clone --
 1. Copy the repository files into a scratch folder, `git init`, commit, then `git clone --bare` into `<root>/<github-user>/<repo>-dev.git`.
 2. Serve that bare repository read-only over git's smart HTTP protocol. A small Node server that pipes requests to `git http-backend` (CGI) works: set `GIT_PROJECT_ROOT` and `GIT_HTTP_EXPORT_ALL`, pass the `HTTP_*` headers through, and refuse `git-receive-pack`. Agent sandboxes usually forbid starting LAN-facing servers, so either give the user the command to run, or, with shell access to the host, copy the bare repository into the degoog container and serve it on `127.0.0.1` there (the Store accepts that URL). The official image's git has no `http-backend`, so answer `GET info/refs?service=git-upload-pack` with a `# service=git-upload-pack` pkt-line, a flush and `git upload-pack --stateless-rpc --advertise-refs`, and pipe `POST git-upload-pack` (gunzip it if `Content-Encoding: gzip`) through `git upload-pack --stateless-rpc`. Pass `Git-Protocol` on as `GIT_PROTOCOL`, and skip the service line for protocol v2. Don't stop it with `pkill -f <script>` inside `sh -c`, which matches and kills that shell too.
 3. Add it with `POST /api/store/repos {"url"}`, then install with `POST /api/store/install {"repoUrl", "itemPath", "type": "plugin"}`. Because the URL path differs, it installs as a separate plugin (`…-dev-<name>`).
-4. **Let the user test.** After your own checks and screenshots, leave the dev install and its git server running, tell the user it is ready, and wait until they say they are done. Don't uninstall it in the same turn. To pick up changes meanwhile, rebuild the bare repository, copy it in again and reinstall.
+4. **Let the user test.** After your own checks and screenshots, leave the dev install and its git server running, tell the user it is ready, and wait until they say they are done. Don't uninstall it in the same turn. To pick up changes meanwhile, rebuild the bare repository, copy it in again, call `POST /api/store/repos/refresh {"url"}` (otherwise install reuses the cached clone), then uninstall and install.
 5. **Then always clean up.** Uninstall with `POST /api/store/uninstall` using the same body, remove the repository with `DELETE /api/store/repos {"url"}`, and confirm the panel, script and CSS are gone. Also stop any server you started in the container and delete its files. Otherwise the panel shows twice once the real install exists.
 
 ### Visual checks and Store screenshots
