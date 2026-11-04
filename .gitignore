@@ -1,0 +1,8 @@
+# Environments
+.env*
+!.env.example
+.envrc
+.venv
+
+# Dependencies
+node_modules/
