@@ -25,9 +25,17 @@ const MAX_PARSE_HTML = 400_000;
 // stops a flood of unique searches from turning into a flood of requests to Fandom.
 const LOOKUP_BUDGET_PER_MINUTE = 120;
 const NAME_MAX = 80;
+const AUDIO_PER_FACT = 3;
+const AUDIO_MAX_BYTES = 8 * 1024 * 1024;
+const AUDIO_CACHE_BYTES = 32 * 1024 * 1024;
+const AUDIO_TIMEOUT_MS = 8000;
+const AUDIO_CACHE_MS = 24 * 3600 * 1000;
+const AUDIO_ALLOW_LIMIT = 2000;
 
 const FANDOM_SUFFIX = ".fandom.com";
 const IMAGE_HOSTS = new Set(["static.wikia.nocookie.net", "vignette.wikia.nocookie.net", "images.wikia.com"]);
+// Audio files on Fandom's file server: ".../images/9/92/Name.ogg/revision/latest?cb=...".
+const AUDIO_PATH_RX = /^\/[^?#]+\.(?:ogg|oga|opus|mp3|wav|flac|m4a)(?:\/revision\/latest)?$/i;
 const GENERIC_WORDS = new Set(["wiki", "fandom"]);
 const SMALL_WORDS = new Set(["a", "an", "and", "as", "at", "by", "for", "from", "in", "into", "of", "on", "or", "the", "to", "vs", "with"]);
 const OPERATOR_RX = /(?:^|\s)(?:site|inurl|intitle|intext|allintitle|allinurl|filetype|ext|lang|before|after|cache|related|define):/i;
@@ -45,10 +53,16 @@ const HATNOTE_RXS = [
 let template = "";
 let pluginFetch = null;
 let pluginSign = null;
+let apiBase = "";
 const settings = { wikis: [], bareMatch: true, showImage: true, showFacts: true, maxFacts: DEFAULT_FACTS };
 
 const lookupCache = new Map();
 const lookupInflight = new Map();
+// Audio URLs the plugin has shown recently. The audio route serves only these, so it is no open proxy.
+const audioAllowed = new Map();
+const audioCache = new Map();
+const audioInflight = new Map();
+let audioCacheBytes = 0;
 
 const _esc = (s) =>
   String(s ?? "")
@@ -340,6 +354,55 @@ const _originalImage = (url) => (url ? _allowedImage(url.replace(/\/scale-to-wid
 /** A full-size infobox image URL, scaled down like the page image thumbnail. */
 const _scaled = (url) => (url && /\/revision\/latest(?=\?|$)/.test(url) ? url.replace(/\/revision\/latest(?=\?|$)/, `/revision/latest/scale-to-width-down/${THUMB_WIDTH}`) : url);
 
+/** An audio file URL on Fandom's file server, or null. */
+const _audioUrl = (value) => {
+  if (typeof value !== "string" || !value || value.length > 1000) return null;
+  try {
+    const url = new URL(value.startsWith("//") ? `https:${value}` : value);
+    if (url.protocol !== "https:" || url.username || url.password || url.port || url.hash) return null;
+    if (!IMAGE_HOSTS.has(url.hostname) || !AUDIO_PATH_RX.test(url.pathname)) return null;
+    return url.href;
+  } catch {
+    return null;
+  }
+};
+
+const SRC_ATTR_RX = /\ssrc\s*=\s*(?:"([^"]*)"|'([^']*)')/i;
+
+/**
+ * The audio files in an infobox value, one per <audio> element: its own src, or else its first
+ * allowed <source>. The file link MediaWiki puts inside is only a fallback. Linear: one pass with indexOf.
+ */
+const _audioSources = (html) => {
+  const source = String(html ?? "").slice(0, MAX_HTML);
+  const out = [];
+  let open = false;
+  let found = false;
+  let i = 0;
+  while (out.length < AUDIO_PER_FACT) {
+    const lt = source.indexOf("<", i);
+    if (lt === -1) break;
+    const gt = source.indexOf(">", lt);
+    if (gt === -1) break;
+    i = gt + 1;
+    const name = (/^<\s*(\/?[a-z0-9]+)/i.exec(source.slice(lt, Math.min(gt + 1, lt + 24)))?.[1] ?? "").toLowerCase();
+    if (name === "/audio") {
+      open = false;
+      continue;
+    }
+    if (name === "audio") {
+      open = source[gt - 1] !== "/";
+      found = false;
+    } else if (name !== "source" || !open || found) continue;
+    const match = SRC_ATTR_RX.exec(source.slice(lt, gt + 1));
+    const url = _audioUrl(_decode(match?.[1] ?? match?.[2] ?? ""));
+    if (!url) continue;
+    found = true;
+    if (!out.includes(url)) out.push(url);
+  }
+  return out;
+};
+
 const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
 
 const _decode = (text) =>
@@ -369,7 +432,7 @@ const _htmlToText = (html) => {
     const name = (/^<\s*(\/?[a-z0-9]+)/i.exec(source.slice(lt, Math.min(gt + 1, lt + 24)))?.[1] ?? "").toLowerCase();
     if (skipUntil) {
       if (name === skipUntil) skipUntil = "";
-    } else if (name === "sup" || name === "style" || name === "script") {
+    } else if (name === "sup" || name === "style" || name === "script" || name === "audio" || name === "video") {
       if (source[gt - 1] !== "/") skipUntil = `/${name}`;
     } else if (BREAK_TAGS.has(name)) {
       out += ", ";
@@ -442,9 +505,11 @@ const _readInfobox = (box) => {
       if (node.type === "data" && data && typeof data === "object") {
         const label = _clip(_htmlToText(data.label), LABEL_MAX);
         const value = _htmlToText(data.value);
-        if (!label || !value || value === "-" || seen.has(label.toLowerCase())) continue;
+        const audio = _audioSources(data.value);
+        if (!label || (!value && !audio.length) || value === "-" || seen.has(label.toLowerCase())) continue;
         seen.add(label.toLowerCase());
-        result.facts.push([label, _clip(value, FACT_MAX)]);
+        // Rows with sound files carry their URLs as a third item; the text is whatever else the row says.
+        result.facts.push(audio.length ? [label, _clip(value, FACT_MAX), audio] : [label, _clip(value, FACT_MAX)]);
       } else if (node.type === "image" && !result.image) {
         const images = Array.isArray(data) ? data : [data];
         result.image = _allowedImage(images.find((img) => img && !img.isVideo)?.url);
@@ -725,13 +790,46 @@ const _sign = (url, sign) => {
   }
 };
 
+// degoog's ctx.apiBase leaves out the DEGOOG_BASE_URL path (v1.1.1), so add it here.
+const _basePath = () => {
+  const raw = String(globalThis.process?.env?.DEGOOG_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  if (!raw) return "";
+  if (!/^https?:\/\//i.test(raw)) return raw;
+  try {
+    const path = new URL(raw).pathname.replace(/\/+$/, "");
+    return path === "/" ? "" : path;
+  } catch {
+    return "";
+  }
+};
+
+/** The plugin route that plays an audio file, so visitors never contact Fandom. Allows the URL there. */
+const _audioRoute = (url) => {
+  if (!apiBase) return "";
+  _remember(audioAllowed, url, Date.now() + AUDIO_CACHE_MS, AUDIO_ALLOW_LIMIT);
+  const base = _basePath();
+  const prefix = base && !apiBase.startsWith(`${base}/`) ? `${base}${apiBase}` : apiBase;
+  return `${prefix}/audio?${new URLSearchParams({ src: url })}`;
+};
+
+const _factValue = (label, value, audio) => {
+  const players = (audio ?? [])
+    .map(_audioRoute)
+    .filter(Boolean)
+    .map((src) => `<audio class="fandom-audio" controls preload="none" src="${_esc(src)}" aria-label="${_esc(label)}" data-fandom-audio></audio>`)
+    .join("");
+  if (!players) return _esc(value);
+  return `${value ? `<span class="fandom-value-text">${_esc(value)}</span>` : ""}${players}`;
+};
+
 const _renderEntry = (entry, summary, wiki, locale, sign) => {
   const image = settings.showImage ? _sign(entry.image, sign) : "";
   // The link opens the full-size image through degoog's image proxy too, so visitors never contact Fandom.
   const fullImage = image ? _sign(_originalImage(entry.image), sign) || image : "";
   const openImage = _esc(_t("openImage", undefined, locale));
   const favicon = _sign(entry.site.favicon, sign);
-  const facts = settings.showFacts ? entry.facts.slice(0, settings.maxFacts) : [];
+  // A sound-only row has nothing to show when the audio route is unavailable.
+  const facts = settings.showFacts ? entry.facts.filter(([, value, audio]) => value || (audio?.length && apiBase)).slice(0, settings.maxFacts) : [];
   const html = _render({
     wiki: _esc(wiki.host),
     url: _esc(entry.url),
@@ -744,8 +842,8 @@ const _renderEntry = (entry, summary, wiki, locale, sign) => {
     facts: facts.length
       ? `<dl class="fandom-facts" data-fandom-facts>${facts
           .map(
-            ([label, value], i) =>
-              `<div class="fandom-fact" data-fandom-row="${i}"><dt class="fandom-label">${_esc(label)}</dt><dd class="fandom-value">${_esc(value)}</dd></div>`,
+            ([label, value, audio], i) =>
+              `<div class="fandom-fact" data-fandom-row="${i}"><dt class="fandom-label">${_esc(label)}</dt><dd class="fandom-value">${_factValue(label, value, audio)}</dd></div>`,
           )
           .join("")}</dl>`
       : "",
@@ -767,6 +865,142 @@ const _safeLocale = (locale) => {
     return "en";
   }
 };
+
+// ---------------------------------------------------------------- audio route
+
+/** The file server labels Ogg files "application/ogg", so the type comes from the file's magic bytes. */
+const _sniffAudio = (bytes) => {
+  const at = (i) => bytes[i];
+  const ascii = (start, text) => [...text].every((ch, i) => at(start + i) === ch.charCodeAt(0));
+  if (!bytes || bytes.length < 12) return null;
+  if (ascii(0, "OggS")) return "audio/ogg";
+  if (ascii(0, "fLaC")) return "audio/flac";
+  if (ascii(0, "RIFF") && ascii(8, "WAVE")) return "audio/wav";
+  if (ascii(4, "ftyp")) return "audio/mp4";
+  if (ascii(0, "ID3") || (at(0) === 0xff && (at(1) & 0xe0) === 0xe0 && (at(1) & 0x06) !== 0)) return "audio/mpeg";
+  return null;
+};
+
+/** The body, or null once it passes max bytes. */
+const _readCapped = async (response, max) => {
+  const reader = response.body?.getReader?.();
+  if (!reader) {
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    return bytes.length <= max ? bytes : null;
+  }
+  const chunks = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.length;
+    if (size > max) {
+      await reader.cancel().catch(() => {});
+      return null;
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return bytes;
+};
+
+const _downloadAudio = (url, fetcher) =>
+  _withTimeout(AUDIO_TIMEOUT_MS, async (signal) => {
+    const response = await fetcher(url, { signal, headers: { Accept: "audio/*" } });
+    if (!response || !response.ok) return null;
+    if (Number(response.headers?.get?.("content-length") || 0) > AUDIO_MAX_BYTES) return null;
+    const bytes = await _readCapped(response, AUDIO_MAX_BYTES);
+    const type = _sniffAudio(bytes);
+    return type ? { bytes, type } : null;
+  }).catch(() => null);
+
+const _dropAudio = (url) => {
+  const entry = audioCache.get(url);
+  if (!entry) return;
+  audioCache.delete(url);
+  audioCacheBytes -= entry.value.bytes.length;
+};
+
+/** Keeps files in memory up to a total size, least recently used out first. */
+const _cacheAudio = (url, value, expires) => {
+  _dropAudio(url);
+  while (audioCache.size && audioCacheBytes + value.bytes.length > AUDIO_CACHE_BYTES) _dropAudio(audioCache.keys().next().value);
+  audioCache.set(url, { value, expires });
+  audioCacheBytes += value.bytes.length;
+};
+
+/** Audio bytes and type for a URL, or null. Failures are not cached. */
+const _fetchAudio = async (url, fetcher) => {
+  const cached = audioCache.get(url);
+  if (cached && cached.expires > Date.now()) {
+    _cacheAudio(url, cached.value, cached.expires);
+    return cached.value;
+  }
+  _dropAudio(url);
+  if (audioInflight.has(url)) return audioInflight.get(url);
+  const pending = _downloadAudio(url, fetcher)
+    .then((value) => {
+      if (value) _cacheAudio(url, value, Date.now() + AUDIO_CACHE_MS);
+      return value;
+    })
+    .finally(() => audioInflight.delete(url));
+  audioInflight.set(url, pending);
+  return pending;
+};
+
+const _plain = (status, text) =>
+  new Response(text, { status, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
+
+/** The whole file, or the single byte range a media element asks for when it seeks. */
+const _audioResponse = ({ bytes, type }, range) => {
+  const headers = {
+    "Content-Type": type,
+    "Accept-Ranges": "bytes",
+    "Cache-Control": "public, max-age=86400",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "default-src 'none'; sandbox",
+  };
+  const size = bytes.length;
+  const match = /^bytes=(\d{0,12})-(\d{0,12})$/.exec(String(range ?? "").trim());
+  if (!match || (!match[1] && !match[2])) {
+    return new Response(bytes, { status: 200, headers: { ...headers, "Content-Length": String(size) } });
+  }
+  const start = match[1] ? Number(match[1]) : Math.max(0, size - Number(match[2]));
+  const end = match[1] && match[2] ? Math.min(Number(match[2]), size - 1) : size - 1;
+  if (start >= size || start > end) {
+    return new Response(null, { status: 416, headers: { ...headers, "Content-Range": `bytes */${size}` } });
+  }
+  const part = bytes.subarray(start, end + 1);
+  return new Response(part, {
+    status: 206,
+    headers: { ...headers, "Content-Length": String(part.length), "Content-Range": `bytes ${start}-${end}/${size}` },
+  });
+};
+
+export const routes = [
+  {
+    method: "get",
+    path: "/audio",
+    rateLimit: true,
+    async handler(request) {
+      const src = String(new URL(request.url).searchParams.get("src") || "");
+      const url = _audioUrl(src);
+      if (!url || url !== src) return _plain(400, "Bad request");
+      // Only files the panel showed recently, so the route can't fetch arbitrary files.
+      const allowed = audioAllowed.get(url);
+      if (!allowed || allowed <= Date.now()) return _plain(404, "Not found");
+      if (typeof pluginFetch !== "function") return _plain(503, "Unavailable");
+      const audio = await _fetchAudio(url, pluginFetch);
+      if (!audio) return _plain(502, "Audio unavailable");
+      return _audioResponse(audio, request.headers?.get?.("range"));
+    },
+  },
+];
 
 export const slot = {
   id: "fandom",
@@ -843,6 +1077,7 @@ export const slot = {
     template = ctx?.template || "";
     pluginFetch = typeof ctx?.fetch === "function" ? ctx.fetch : null;
     pluginSign = typeof ctx?.signProxyUrl === "function" ? ctx.signProxyUrl : null;
+    apiBase = typeof ctx?.apiBase === "string" ? ctx.apiBase.replace(/\/+$/, "") : "";
   },
 
   configure(next) {
@@ -888,6 +1123,11 @@ export const _internals = {
   summary: _summary,
   parseInfobox: _parseInfobox,
   htmlToText: _htmlToText,
+  audioSources: _audioSources,
+  audioUrl: _audioUrl,
+  sniffAudio: _sniffAudio,
+  audioLimits: { maxBytes: AUDIO_MAX_BYTES, cacheBytes: AUDIO_CACHE_BYTES },
+  audioCacheBytes: () => audioCacheBytes,
   originalImage: _originalImage,
   introFromHtml: _introFromHtml,
   jsonObjects: _jsonObjects,
@@ -900,7 +1140,12 @@ export const _internals = {
     budget.used = 0;
     lookupCache.clear();
     lookupInflight.clear();
+    audioAllowed.clear();
+    audioCache.clear();
+    audioInflight.clear();
+    audioCacheBytes = 0;
   },
 };
 
-export default { slot };
+// The slot and route registries read the named `slot` and `routes` exports.
+export default { slot, routes };

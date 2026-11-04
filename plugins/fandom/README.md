@@ -29,7 +29,7 @@ With bare matching on, everyday words that happen to be page titles also show a 
 - **Keywords** (for each wiki): optional, comma separated. A search that starts or ends with one only looks on that wiki. The wiki's subdomain, such as `callofduty`, always works as a keyword.
 - **Match page titles on their own**: show a card when the whole search is a page title. When it's off, a search needs a keyword, or `wiki` or `fandom` at the end.
 - **Show image**: show the page's main image.
-- **Show facts**: list rows from the page's infobox.
+- **Show facts**: list rows from the page's infobox. Rows with sound files, such as a killstreak's acquisition sound, get an audio player.
 - **Number of facts**: how many infobox rows to show, from 1 to 10.
 - **Position**: the knowledge panel by default. The sidebar slots, at a glance and above results are also available.
 
@@ -39,8 +39,10 @@ Nothing is looked up until you add a wiki. After that, every search that passes 
 
 The page image and wiki icon come from Fandom's image server (`static.wikia.nocookie.net`) and load through degoog's image proxy, so visitors never contact Fandom unless they open the page link. Clicking the image opens the full-size file through the same proxy.
 
+Sound files in infobox rows play through the plugin's own `/audio` route, because degoog's image proxy only passes images. Nothing is fetched until a visitor presses play. Your degoog server then downloads the file from Fandom's file server, up to 8 MB, and keeps it in memory for a day, with at most 32 MB of files at once. The route only serves sound files that the panel has shown, and only from `static.wikia.nocookie.net`, so it can't be used to fetch anything else.
+
 degoog's built-in Wikipedia panel also uses the knowledge panel slot, so both cards can appear for the same search.
 
 ## No-JS mode
 
-The panel renders the same on the `/nojs` page. The plugin has no client script.
+The panel renders the same on the `/nojs` page, audio players included. The plugin has no client script.

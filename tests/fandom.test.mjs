@@ -72,7 +72,20 @@ const AK_BOX = [
   row("Damage", "100-85 (SP)<br/>40-30 (MP)"),
 ];
 
-const GHOST_INTRO = `<div class="mw-content-ltr mw-parser-output" lang="en" dir="ltr"><div class="pagination"><p class="mw-empty-elt"></p><aside class="portable-infobox"><p>Inside the infobox</p></aside></div><dl><dd><i>For other uses, see <a href="/wiki/Riley">Riley</a>.</i></dd></dl><div class="quote"><p>"Another keeper: Ghost." — Soap</p></div><p class="mw-empty-elt">
+const SOUND = `${IMG}/9/92/MW2_Killstreak_CarePackage.ogg/revision/latest?cb=20100927133301`;
+// How Fandom renders a sound file in an infobox row: the link inside <audio> is only a fallback.
+const audioValue = (src, extra = "") =>
+  `<span class="mw-default-size" typeof="mw:File"><audio src="${src}" width="180" class="mw-file-element" style="max-width: 100%; width: 180px;" controls=""><a href="http://callofduty.fandom.com/wiki/File:MW2_Killstreak_CarePackage.ogg">http://callofduty.fandom.com/wiki/File:MW2_Killstreak_CarePackage.ogg</a></audio></span>${extra}`;
+const CARE_BOX = [
+  row("", "-"),
+  row("Type", '<a href="/wiki/Killstreak" title="Killstreak">Killstreak</a>'),
+  row("Inventory icon", `<span typeof="mw:File"><a href="${IMG}/d/dd/Care_Package.gif/revision/latest"><img src="${IMG}/d/dd/Care_Package.gif/revision/latest" /></a></span>`),
+  row("Acquisition sound", audioValue(SOUND)),
+  row("Unlocked at", "Start"),
+];
+const OGG_BYTES = new Uint8Array([..."OggS"].map((ch) => ch.charCodeAt(0)).concat(Array.from({ length: 60 }, (_, i) => i)));
+
+const GHOST_INTRO =`<div class="mw-content-ltr mw-parser-output" lang="en" dir="ltr"><div class="pagination"><p class="mw-empty-elt"></p><aside class="portable-infobox"><p>Inside the infobox</p></aside></div><dl><dd><i>For other uses, see <a href="/wiki/Riley">Riley</a>.</i></dd></dl><div class="quote"><p>"Another keeper: Ghost." — Soap</p></div><p class="mw-empty-elt">
 </p><p><b>Lieutenant Simon Riley</b>, also known as <b>Ghost</b>, is a British special forces operator.<sup id="cite_note-1"><a href="#cite">[1]</a></sup><br>He is a member of Task Force 141.
 </p><p>Ghost appears in <i>Call of Duty: Modern Warfare 2</i> &amp; more.</p></div>`;
 
@@ -121,6 +134,9 @@ const WIKIS = {
       Riley: page("Riley", { pageprops: { fandomdescription: "Riley may also refer to: Simon Riley." } }),
       "Category:Weapons Per Game": { ns: 14, title: "Category:Weapons Per Game", pageid: 9 },
       London: page("London", { pageprops: { fandomdescription: "London is a city." } }),
+      "Care Package": page("Care Package", {
+        pageprops: { fandomdescription: "The Care Package is a killstreak.", infoboxes: infobox(CARE_BOX) },
+      }),
     },
     redirects: {
       "Simon Riley": 'Simon "Ghost" Riley',
@@ -157,7 +173,7 @@ const jsonResponse = (body, status = 200) =>
 const upperFirst = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
 /** Answers api.php the way MediaWiki does, for the parts the plugin uses. */
-const fakeFetch = ({ fail = false, failHosts = [], delayMs = 0 } = {}) => {
+const fakeFetch = ({ fail = false, failHosts = [], delayMs = 0, files = {} } = {}) => {
   const calls = [];
   const fetcher = async (url, options = {}) => {
     calls.push(url);
@@ -165,6 +181,11 @@ const fakeFetch = ({ fail = false, failHosts = [], delayMs = 0 } = {}) => {
     if (options.signal?.aborted) throw new Error("aborted");
     const parsed = new URL(url);
     if (fail || failHosts.includes(parsed.hostname)) throw new Error("network down");
+    if (parsed.hostname === "static.wikia.nocookie.net") {
+      const file = files[url];
+      if (!file) return new Response("missing", { status: 404 });
+      return new Response(file, { status: 200, headers: { "Content-Type": "application/ogg" } });
+    }
     const wiki = WIKIS[parsed.hostname];
     if (!wiki || parsed.pathname !== "/api.php") return new Response("missing", { status: 404 });
     const params = parsed.searchParams;
@@ -203,10 +224,12 @@ const WIKI_SETTING = JSON.stringify([
 const defaults = Object.fromEntries(slot.settingsSchema.map((field) => [field.key, field.default]));
 const sign = (url) => `/api/proxy/image?url=${encodeURIComponent(url)}&sig=test`;
 
-const setup = ({ fetcher = fakeFetch(), settings = {}, signProxyUrl = sign } = {}) => {
+const API_BASE = "/api/plugin/user-degoog-extensions-fandom";
+
+const setup = ({ fetcher = fakeFetch(), settings = {}, signProxyUrl = sign, apiBase = API_BASE } = {}) => {
   _internals.clearCaches();
   slot.t = translator;
-  slot.init({ template, fetch: fetcher, signProxyUrl });
+  slot.init({ template, fetch: fetcher, signProxyUrl, apiBase });
   slot.configure({ ...defaults, wikis: WIKI_SETTING, ...settings });
   return fetcher;
 };
@@ -757,4 +780,141 @@ test("lookups time out instead of hanging", { timeout: 15000 }, async () => {
   const start = Date.now();
   assert.deepEqual(await run("simon riley"), { title: "", html: "" });
   assert.ok(Date.now() - start < 6000);
+});
+
+// ---------------------------------------------------------------- audio
+
+const route = mod.routes.find((entry) => entry.path === "/audio");
+const audioSrcs = (html) => [...html.matchAll(/<audio class="fandom-audio"[^>]*src="([^"]*)"[^>]*data-fandom-audio>/g)].map((m) => m[1].replace(/&amp;/g, "&"));
+const routePath = (src) => src.slice(src.indexOf(API_BASE) + API_BASE.length);
+const callRoute = (path, headers = {}) => route.handler(new Request(`http://localhost${API_BASE}${path}`, { headers }));
+
+test("the audio route is exported for degoog's route registry", () => {
+  assert.equal(mod.default.routes, mod.routes);
+  assert.equal(route.method, "get");
+  assert.equal(route.rateLimit, true);
+});
+
+test("sound files in infobox rows render as audio players, not their fallback link", async () => {
+  setup();
+  const { html } = await run("care package");
+  assert.deepEqual(facts(html), [["Type", "Killstreak"], ["Unlocked at", "Start"]], "plain rows are unchanged");
+  assert.ok(!html.includes("File:MW2_Killstreak"), "the fallback link is not shown as text");
+  assert.match(html, /<dt class="fandom-label">Acquisition sound<\/dt><dd class="fandom-value"><audio /);
+  assert.deepEqual(audioSrcs(html), [`${API_BASE}/audio?${new URLSearchParams({ src: SOUND })}`], "played through the plugin route");
+  assert.match(html, /<audio [^>]*controls preload="none"[^>]*aria-label="Acquisition sound"/);
+  assert.ok(!/src="https?:/.test(html), "nothing loads from Fandom directly");
+});
+
+test("audio sources: one per element, Fandom's file server only", () => {
+  assert.deepEqual(_internals.audioSources(audioValue(SOUND)), [SOUND]);
+  const other = `${IMG}/1/12/Other.mp3/revision/latest`;
+  assert.deepEqual(
+    _internals.audioSources(`<audio controls><source src="${other}" type="audio/mpeg"><source src="${SOUND}"></audio>`),
+    [other],
+    "alternative sources make one player",
+  );
+  assert.deepEqual(_internals.audioSources(`<audio src='${SOUND.replace(/&/g, "&amp;")}'></audio><audio src="${other}"></audio>`), [SOUND, other]);
+  assert.deepEqual(_internals.audioSources(`<source src="${other}">`), [], "a source outside audio is ignored");
+  for (const bad of [
+    "https://evil.com/x.ogg",
+    "http://static.wikia.nocookie.net/callofduty/images/9/92/X.ogg/revision/latest",
+    `${IMG}/0/04/Ghost.jpg/revision/latest`,
+    "https://user:pw@static.wikia.nocookie.net/x/images/1/12/X.ogg",
+    "https://static.wikia.nocookie.net:8443/x/images/1/12/X.ogg",
+    "javascript:alert(1)//.ogg",
+  ]) {
+    assert.deepEqual(_internals.audioSources(`<audio src="${bad}"></audio>`), [], bad);
+  }
+  assert.equal(_internals.audioUrl("//static.wikia.nocookie.net/x/images/1/12/X.ogg"), "https://static.wikia.nocookie.net/x/images/1/12/X.ogg");
+  assert.equal(_internals.htmlToText(audioValue(SOUND, " (MW2)")), "(MW2)", "fallback text inside audio is dropped");
+  const many = Array.from({ length: 10 }, (_, i) => `<audio src="${IMG}/1/12/S${i}.ogg"></audio>`).join("");
+  assert.equal(_internals.audioSources(many).length, 3, "at most three players per row");
+});
+
+test("rows keep their text next to the player", async () => {
+  const box = infobox([row("Voice", audioValue(SOUND, "<br>Spoken by the pilot"))]);
+  assert.deepEqual(_internals.parseInfobox(box).facts, [["Voice", "Spoken by the pilot", [SOUND]]]);
+  const wiki = WIKIS["callofduty.fandom.com"];
+  wiki.pages.Voice = page("Voice", { pageprops: { fandomdescription: "Voice.", infoboxes: box } });
+  try {
+    setup();
+    const { html } = await run("voice");
+    assert.match(html, /<dd class="fandom-value"><span class="fandom-value-text">Spoken by the pilot<\/span><audio /);
+  } finally {
+    delete wiki.pages.Voice;
+  }
+});
+
+test("without a route base, sound-only rows are left out", async () => {
+  setup({ apiBase: "" });
+  const { html } = await run("care package");
+  assert.ok(!html.includes("<audio"));
+  assert.deepEqual(facts(html), [["Type", "Killstreak"], ["Unlocked at", "Start"]]);
+});
+
+test("the audio route serves only shown files, sniffed and with ranges", async () => {
+  const fetcher = setup({ fetcher: fakeFetch({ files: { [SOUND]: OGG_BYTES } }) });
+  const path = `/audio?${new URLSearchParams({ src: SOUND })}`;
+  assert.equal((await callRoute(path)).status, 404, "not shown yet");
+  const [src] = audioSrcs((await run("care package")).html);
+  assert.equal(routePath(src), path);
+  const full = await callRoute(path);
+  assert.equal(full.status, 200);
+  assert.equal(full.headers.get("content-type"), "audio/ogg");
+  assert.equal(full.headers.get("accept-ranges"), "bytes");
+  assert.equal(full.headers.get("x-content-type-options"), "nosniff");
+  assert.deepEqual(new Uint8Array(await full.arrayBuffer()), OGG_BYTES);
+  const part = await callRoute(path, { Range: "bytes=4-9" });
+  assert.equal(part.status, 206);
+  assert.equal(part.headers.get("content-range"), `bytes 4-9/${OGG_BYTES.length}`);
+  assert.deepEqual(new Uint8Array(await part.arrayBuffer()), OGG_BYTES.subarray(4, 10));
+  assert.deepEqual(new Uint8Array(await (await callRoute(path, { Range: "bytes=-4" })).arrayBuffer()), OGG_BYTES.subarray(-4));
+  assert.equal((await callRoute(path, { Range: "bytes=999-" })).status, 416);
+  assert.equal(fetcher.calls.filter((url) => url === SOUND).length, 1, "the file is cached");
+  for (const bad of ["/audio", "/audio?src=https%3A%2F%2Fevil.com%2Fx.ogg", `/audio?${new URLSearchParams({ src: `${IMG}/0/04/Ghost.jpg/revision/latest` })}`]) {
+    assert.equal((await callRoute(bad)).status, 400, bad);
+  }
+  const unseen = `${IMG}/1/12/Unseen.ogg/revision/latest`;
+  assert.equal((await callRoute(`/audio?${new URLSearchParams({ src: unseen })}`)).status, 404, "files never shown are refused");
+  assert.ok(!fetcher.calls.includes(unseen));
+});
+
+test("the audio route refuses files that are not audio or too big", async () => {
+  setup({ fetcher: fakeFetch({ files: { [SOUND]: new TextEncoder().encode("<html>not audio at all</html>") } }) });
+  assert.equal((await callRoute(routePath(audioSrcs((await run("care package")).html)[0]))).status, 502);
+
+  const big = new Uint8Array(_internals.audioLimits.maxBytes + 1);
+  big.set(OGG_BYTES);
+  setup({ fetcher: fakeFetch({ files: { [SOUND]: big } }) });
+  assert.equal((await callRoute(routePath(audioSrcs((await run("care package")).html)[0]))).status, 502);
+  assert.equal(_internals.audioCacheBytes(), 0);
+});
+
+test("audio types come from magic bytes", () => {
+  const bytes = (head) => {
+    const out = new Uint8Array(16);
+    out.set(typeof head === "string" ? [...head].map((ch) => ch.charCodeAt(0)) : head);
+    return out;
+  };
+  assert.equal(_internals.sniffAudio(bytes("OggS")), "audio/ogg");
+  assert.equal(_internals.sniffAudio(bytes("fLaC")), "audio/flac");
+  assert.equal(_internals.sniffAudio(bytes("RIFF\0\0\0\0WAVE")), "audio/wav");
+  assert.equal(_internals.sniffAudio(bytes("\0\0\0\x20ftypM4A ")), "audio/mp4");
+  assert.equal(_internals.sniffAudio(bytes("ID3")), "audio/mpeg");
+  assert.equal(_internals.sniffAudio(bytes([0xff, 0xfb])), "audio/mpeg");
+  assert.equal(_internals.sniffAudio(bytes("<svg")), null);
+  assert.equal(_internals.sniffAudio(bytes("\x89PNG")), null);
+  assert.equal(_internals.sniffAudio(new Uint8Array(4)), null);
+});
+
+test("audio routes respect a base path", async () => {
+  process.env.DEGOOG_BASE_URL = "https://search.example.com/degoog/";
+  try {
+    setup();
+    const [src] = audioSrcs((await run("care package")).html);
+    assert.ok(src.startsWith(`/degoog${API_BASE}/audio?`), src);
+  } finally {
+    delete process.env.DEGOOG_BASE_URL;
+  }
 });

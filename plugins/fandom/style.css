@@ -90,6 +90,30 @@
   overflow-wrap: anywhere;
 }
 
+.fandom-value-text {
+  display: block;
+}
+
+.fandom-audio {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: 36px;
+  margin: 0.15rem 0;
+  color-scheme: light;
+}
+
+/* The native player follows degoog's theme, using the same rules as degoog's own colours. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .fandom-audio {
+    color-scheme: dark;
+  }
+}
+
+[data-theme="dark"] .fandom-audio {
+  color-scheme: dark;
+}
+
 .fandom-source {
   display: inline-flex;
   align-items: center;
