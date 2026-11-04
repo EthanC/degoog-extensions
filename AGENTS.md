@@ -54,7 +54,7 @@ plugins/<name>/
   locales/*.json  Optional translations (en.json at minimum if any)
   author.json     {"name": "<author>", "url": "<author profile URL>"}, same as the other extensions here
   README.md       Shown as in-app documentation and on GitHub
-  screenshots/    1.webp, 2.webp, ... shown on the Store card
+  screenshots/    1.webp, 2.webp, 3.webp shown on the Store card (see "Visual checks")
 ```
 
 ### Choosing the extension type
@@ -174,7 +174,9 @@ The Store installs only from git URLs that support shallow clones (`git clone --
 
 - **Browser.** Use a browser-automation tool if your environment provides one. Otherwise drive a local Chromium headless over `--remote-debugging-pipe`, with a throwaway `--user-data-dir` in the scratch folder. That opens no network port. `--screenshot` combined with `--virtual-time-budget` hangs on degoog's open result stream, so wait for a DOM condition instead, for example `[data-tstamp-card][data-tstamp-mounted="1"]`.
 - **What to check.** The panel mounts. Dark and light themes are both right (emulate `prefers-color-scheme`). Nothing overflows at 1280px or at 390px. Interactive bits work: the timers tick, and the copy buttons copy the right text and reset. The console shows no errors from the plugin.
-- **Screenshot format.** About 1600px-wide WebP, the size of the official listings: a 1280×704 viewport at device scale 1.25, captured with `Page.captureScreenshot {format: "webp", quality: 90}`. Show the search bar, the panel and the first result. Include at least one dark-mode shot, and use that one in the plugin README.
+- **Required set.** Every plugin has exactly three screenshots, all of the same query: `1.webp` dark-mode desktop, `2.webp` light-mode desktop, `3.webp` dark-mode mobile. Each shows the search bar, the panel and the first result. The plugin README uses `1.webp`.
+- **Desktop format.** About 1600px-wide WebP, the size of the official listings: a 1280×704 viewport at device scale 1.25, captured with `Page.captureScreenshot {format: "webp", quality: 90}`.
+- **Mobile format.** A 390×844 viewport at device scale 2 (780×1688 WebP, same capture options), with `Emulation.setDeviceMetricsOverride {mobile: true}`, touch emulation and a mobile user agent, so degoog renders its phone layout.
 - **Set the emulated time zone** to a neutral one (`Emulation.setTimezoneOverride`, for example `America/New_York`), so screenshots don't reveal the user's real zone. Scan every image for anything else personal before committing.
 
 ## Documentation
@@ -188,7 +190,7 @@ The Store installs only from git URLs that support shallow clones (`git clone --
 1. `npm test` passes, and new behaviour has tests.
 2. The `version` in `package.json` is bumped. Bump `minDegoogVersion` only if you used newer core APIs.
 3. Locales have matching keys. Every user-facing string in `index.js` goes through `slot.t` or `{{ t:… }}`.
-4. If the UI changed, it was checked live, in both themes and at mobile width. Refresh the screenshots if needed.
+4. If the UI changed, it was checked live, in both themes and at mobile width. Refresh the screenshots if needed, keeping the required dark desktop, light desktop and dark mobile set of one query.
 5. The user has finished testing the dev sideload, and it is then uninstalled, its repository removed and its server stopped.
 6. Commit with a Conventional Commit message. Push only when the user asks. The GitHub repository must be public for the Store to clone it.
 7. `AGENTS.md` is updated if this change taught you anything a future agent would need. See below.
