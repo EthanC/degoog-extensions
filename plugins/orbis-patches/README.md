@@ -3,7 +3,7 @@
 Looks up PlayStation 4 (Orbis) title IDs on [ORBISPatches](https://orbispatches.com). Search for a title ID such as `CUSA04762` and the panel shows the game's name, icon and background art with its logo when it has one, its region, current version and the size of the latest patch, with a link to the title's page on ORBISPatches. Click the icon, background or logo to open the full image in a new tab.
 
 <div align="center">
-    <img width="800" alt="Orbis Patches panel showing God of War with its logo in dark mode" src="./screenshots/1.webp" />
+    <img width="800" alt="Orbis Patches panel showing The Last of Us Remastered in dark mode" src="./screenshots/1.webp" />
 </div>
 
 ## Triggers
