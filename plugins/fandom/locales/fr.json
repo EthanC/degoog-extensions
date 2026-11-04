@@ -1,0 +1,40 @@
+{
+  "fandom": {
+    "name": "Fandom",
+    "description": "Affiche une fiche avec une image, des faits clés et un lien lorsqu’une recherche correspond à une page de l’un des wikis Fandom ajoutés, comme callofduty.fandom.com.",
+    "readMore": "En savoir plus sur {wiki}",
+    "imageAlt": "{title}",
+    "openImage": "Ouvrir l’image en taille réelle",
+    "settings": {
+      "wikis": {
+        "label": "Wikis",
+        "description": "Wikis Fandom à interroger, par ordre de priorité. Les recherches qui passent une vérification rapide sont envoyées à chaque wiki par votre serveur degoog.",
+        "add": "Ajouter un wiki",
+        "url": {
+          "label": "URL du wiki",
+          "description": "Adresse d’un wiki sur fandom.com. Les wikis d’autres langues comme https://naruto.fandom.com/es fonctionnent aussi."
+        },
+        "keywords": {
+          "label": "Mots-clés",
+          "description": "Facultatif, séparés par des virgules. Une recherche qui commence ou se termine par l’un d’eux, comme « cod ghost », ne cherche que dans ce wiki. Le sous-domaine du wiki fonctionne toujours."
+        }
+      },
+      "bareMatch": {
+        "label": "Reconnaître les titres seuls",
+        "description": "Affiche une fiche quand toute la recherche est un titre de page, comme « simon riley ». Désactivé, il faut un mot-clé, ou « wiki » ou « fandom » à la fin."
+      },
+      "showImage": {
+        "label": "Afficher l’image",
+        "description": "Affiche l’image principale de la page. Les images passent par le proxy d’images de degoog."
+      },
+      "showFacts": {
+        "label": "Afficher les faits",
+        "description": "Liste des lignes de l’infobox de la page."
+      },
+      "maxFacts": {
+        "label": "Nombre de faits",
+        "description": "Nombre de lignes de l’infobox à afficher, de 1 à 10."
+      }
+    }
+  }
+}

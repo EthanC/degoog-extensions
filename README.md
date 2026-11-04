@@ -19,6 +19,7 @@ Extensions for [degoog](https://github.com/degoog-org/degoog) search.
 | [Orbis Patches](plugins/orbis-patches) | slot | Looks up PlayStation 4 title IDs such as `CUSA04762` or `CUSA-04762` on ORBISPatches and shows the game’s name, art and a link to its patch page. |
 | [Prospero Patches](plugins/prospero-patches) | slot | Looks up PlayStation 5 title IDs such as `PPSA01628` or `PPSA-01628` on PROSPEROPatches and shows the game’s name, art and a link to its patch page. |
 | [QR Code Scanner](plugins/qr-scanner) | slot, command | Reads QR codes from an image you browse for, paste, drag in or link to, from searches such as `qr code reader` or the `!qrscan` bang. Images are decoded in your browser. |
+| [Fandom](plugins/fandom) | slot | Shows a knowledge panel with an image, opening text, infobox facts and a link when a search names a page on the Fandom wikis you add, such as `callofduty.fandom.com`. |
 
 ## Development
 

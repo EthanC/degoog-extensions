@@ -1,0 +1,40 @@
+{
+  "fandom": {
+    "name": "Fandom",
+    "description": "Shows a summary card with an image, key facts and a link when a search matches a page on one of the Fandom wikis you add, such as callofduty.fandom.com.",
+    "readMore": "Read more on {wiki}",
+    "imageAlt": "{title}",
+    "openImage": "Open the full-size image",
+    "settings": {
+      "wikis": {
+        "label": "Wikis",
+        "description": "Fandom wikis to search, in order of priority. Searches that pass a quick check are looked up on each wiki by your degoog server.",
+        "add": "Add wiki",
+        "url": {
+          "label": "Wiki URL",
+          "description": "Address of a wiki on fandom.com. Language wikis such as https://naruto.fandom.com/es work too."
+        },
+        "keywords": {
+          "label": "Keywords",
+          "description": "Optional, comma separated. A search starting or ending with one, such as “cod ghost”, only looks on this wiki. The wiki’s subdomain always works."
+        }
+      },
+      "bareMatch": {
+        "label": "Match page titles on their own",
+        "description": "Show a card when the whole search is a page title, such as “simon riley”. Turn off to need a keyword, or “wiki” or “fandom” at the end."
+      },
+      "showImage": {
+        "label": "Show image",
+        "description": "Show the page’s main image. Images are loaded through degoog’s image proxy."
+      },
+      "showFacts": {
+        "label": "Show facts",
+        "description": "List rows from the page’s infobox."
+      },
+      "maxFacts": {
+        "label": "Number of facts",
+        "description": "How many infobox rows to show, from 1 to 10."
+      }
+    }
+  }
+}

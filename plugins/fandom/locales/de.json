@@ -1,0 +1,40 @@
+{
+  "fandom": {
+    "name": "Fandom",
+    "description": "Zeigt eine Karte mit Bild, wichtigen Fakten und Link, wenn eine Suche zu einer Seite in einem der hinzugefügten Fandom-Wikis passt, etwa callofduty.fandom.com.",
+    "readMore": "Mehr im {wiki}",
+    "imageAlt": "{title}",
+    "openImage": "Bild in voller Größe öffnen",
+    "settings": {
+      "wikis": {
+        "label": "Wikis",
+        "description": "Zu durchsuchende Fandom-Wikis, nach Priorität geordnet. Suchen, die eine schnelle Prüfung bestehen, schlägt dein degoog-Server in jedem Wiki nach.",
+        "add": "Wiki hinzufügen",
+        "url": {
+          "label": "Wiki-URL",
+          "description": "Adresse eines Wikis auf fandom.com. Sprachversionen wie https://naruto.fandom.com/es funktionieren auch."
+        },
+        "keywords": {
+          "label": "Stichwörter",
+          "description": "Optional, durch Kommas getrennt. Eine Suche, die mit einem davon beginnt oder endet, etwa „cod ghost“, sucht nur in diesem Wiki. Die Subdomain des Wikis funktioniert immer."
+        }
+      },
+      "bareMatch": {
+        "label": "Seitentitel allein erkennen",
+        "description": "Zeigt eine Karte, wenn die ganze Suche ein Seitentitel ist, etwa „simon riley“. Ausgeschaltet ist ein Stichwort nötig, oder „wiki“ bzw. „fandom“ am Ende."
+      },
+      "showImage": {
+        "label": "Bild anzeigen",
+        "description": "Zeigt das Hauptbild der Seite. Bilder laden über den Bild-Proxy von degoog."
+      },
+      "showFacts": {
+        "label": "Fakten anzeigen",
+        "description": "Listet Zeilen aus der Infobox der Seite auf."
+      },
+      "maxFacts": {
+        "label": "Anzahl der Fakten",
+        "description": "Wie viele Infobox-Zeilen angezeigt werden, von 1 bis 10."
+      }
+    }
+  }
+}

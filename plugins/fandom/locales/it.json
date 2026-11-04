@@ -1,0 +1,40 @@
+{
+  "fandom": {
+    "name": "Fandom",
+    "description": "Mostra una scheda con immagine, dati principali e link quando una ricerca corrisponde a una pagina di uno dei wiki Fandom aggiunti, come callofduty.fandom.com.",
+    "readMore": "Leggi di più su {wiki}",
+    "imageAlt": "{title}",
+    "openImage": "Apri l’immagine a grandezza intera",
+    "settings": {
+      "wikis": {
+        "label": "Wiki",
+        "description": "Wiki Fandom da consultare, in ordine di priorità. Le ricerche che superano un rapido controllo vengono cercate su ogni wiki dal tuo server degoog.",
+        "add": "Aggiungi wiki",
+        "url": {
+          "label": "URL del wiki",
+          "description": "Indirizzo di un wiki su fandom.com. Funzionano anche i wiki in altre lingue come https://naruto.fandom.com/es."
+        },
+        "keywords": {
+          "label": "Parole chiave",
+          "description": "Facoltative, separate da virgole. Una ricerca che inizia o finisce con una di esse, come “cod ghost”, cerca solo in questo wiki. Il sottodominio del wiki funziona sempre."
+        }
+      },
+      "bareMatch": {
+        "label": "Riconosci i titoli da soli",
+        "description": "Mostra una scheda quando l’intera ricerca è il titolo di una pagina, come “simon riley”. Se disattivato serve una parola chiave, oppure “wiki” o “fandom” alla fine."
+      },
+      "showImage": {
+        "label": "Mostra immagine",
+        "description": "Mostra l’immagine principale della pagina. Le immagini passano dal proxy immagini di degoog."
+      },
+      "showFacts": {
+        "label": "Mostra dati",
+        "description": "Elenca le righe dell’infobox della pagina."
+      },
+      "maxFacts": {
+        "label": "Numero di dati",
+        "description": "Quante righe dell’infobox mostrare, da 1 a 10."
+      }
+    }
+  }
+}
