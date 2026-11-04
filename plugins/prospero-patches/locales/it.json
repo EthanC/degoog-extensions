@@ -1,0 +1,37 @@
+{
+  "prospero": {
+    "name": "Prospero Patches",
+    "description": "Cerca gli ID dei titoli PlayStation 5 come PPSA01628 o PPSA-01628 su PROSPEROPatches e mostra il nome del gioco, le immagini e un link alla sua pagina degli aggiornamenti.",
+    "platform": "PlayStation 5",
+    "iconAlt": "Icona di {name}",
+    "viewPage": "Vedi gli aggiornamenti su PROSPEROPatches",
+    "labels": {
+      "region": "Regione",
+      "version": "Versione attuale",
+      "patchSize": "Ultimo aggiornamento"
+    },
+    "openArt": {
+      "icon": "Apri l’icona",
+      "background": "Apri l’immagine di sfondo",
+      "logo": "Apri il logo"
+    },
+    "settings": {
+      "showIcon": {
+        "label": "Mostra icona",
+        "description": "Mostra l’icona del gioco. Le immagini vengono scaricate dal tuo server degoog, quindi i visitatori non contattano mai PROSPEROPatches."
+      },
+      "showBackground": {
+        "label": "Mostra immagine di sfondo",
+        "description": "Mostra l’immagine di sfondo del gioco come banner sopra il titolo."
+      },
+      "showLogo": {
+        "label": "Mostra logo",
+        "description": "Mostra il logo del gioco sull’immagine di sfondo, per i titoli che ne hanno uno su PROSPEROPatches. Richiede l’immagine di sfondo attiva."
+      },
+      "showDetails": {
+        "label": "Mostra dettagli",
+        "description": "Elenca la regione, la versione attuale e la dimensione dell’ultimo aggiornamento."
+      }
+    }
+  }
+}

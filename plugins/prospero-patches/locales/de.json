@@ -1,0 +1,37 @@
+{
+  "prospero": {
+    "name": "Prospero Patches",
+    "description": "Sucht PlayStation-5-Title-IDs wie PPSA01628 oder PPSA-01628 auf PROSPEROPatches und zeigt Namen, Artwork und einen Link zur Patch-Seite des Spiels.",
+    "platform": "PlayStation 5",
+    "iconAlt": "Symbol von {name}",
+    "viewPage": "Patches auf PROSPEROPatches ansehen",
+    "labels": {
+      "region": "Region",
+      "version": "Aktuelle Version",
+      "patchSize": "Neuester Patch"
+    },
+    "openArt": {
+      "icon": "Symbol öffnen",
+      "background": "Hintergrundbild öffnen",
+      "logo": "Logo öffnen"
+    },
+    "settings": {
+      "showIcon": {
+        "label": "Symbol anzeigen",
+        "description": "Zeigt das Symbol des Spiels. Das Artwork lädt dein degoog-Server, Besucher kontaktieren PROSPEROPatches also nie."
+      },
+      "showBackground": {
+        "label": "Hintergrundbild anzeigen",
+        "description": "Zeigt das Hintergrundbild des Spiels als Banner über dem Titel."
+      },
+      "showLogo": {
+        "label": "Logo anzeigen",
+        "description": "Zeigt das Logo des Spiels auf dem Hintergrundbild, sofern PROSPEROPatches eines hat. Dafür muss das Hintergrundbild aktiviert sein."
+      },
+      "showDetails": {
+        "label": "Details anzeigen",
+        "description": "Listet Region, aktuelle Version und Größe des neuesten Patches auf."
+      }
+    }
+  }
+}

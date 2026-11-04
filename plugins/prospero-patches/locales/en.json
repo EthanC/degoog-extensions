@@ -1,0 +1,37 @@
+{
+  "prospero": {
+    "name": "Prospero Patches",
+    "description": "Looks up PlayStation 5 title IDs such as PPSA01628 or PPSA-01628 on PROSPEROPatches and shows the game's name, art and a link to its patch page.",
+    "platform": "PlayStation 5",
+    "iconAlt": "{name} icon",
+    "viewPage": "View patches on PROSPEROPatches",
+    "labels": {
+      "region": "Region",
+      "version": "Current Version",
+      "patchSize": "Latest patch"
+    },
+    "openArt": {
+      "icon": "Open the icon",
+      "background": "Open the background art",
+      "logo": "Open the logo"
+    },
+    "settings": {
+      "showIcon": {
+        "label": "Show icon",
+        "description": "Show the game's icon. Art is fetched by your degoog server, so visitors never contact PROSPEROPatches."
+      },
+      "showBackground": {
+        "label": "Show background art",
+        "description": "Show the game's background art as a banner above the title."
+      },
+      "showLogo": {
+        "label": "Show logo",
+        "description": "Show the game's logo on the background art, for titles that have one on PROSPEROPatches. Needs the background art turned on."
+      },
+      "showDetails": {
+        "label": "Show details",
+        "description": "List the region, current version and size of the latest patch."
+      }
+    }
+  }
+}
